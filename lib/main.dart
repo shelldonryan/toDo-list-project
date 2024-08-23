@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       title: 'To-Do List',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
-        useMaterial3: true,
+        useMaterial3: false,
       ),
       home: HomePageToDo(title: 'To-do List Page'),
     );
@@ -31,11 +31,15 @@ class HomePageToDo extends StatefulWidget {
 
 class _HomePageToDo extends State<HomePageToDo> {
   var listTasks = <String>[];
+  final TextEditingController textController = TextEditingController();
 
   Future<void> _todo_task() async {
-    setState(() {
-      listTasks.add('new task');
-    });
+    if (textController.text.isNotEmpty) {
+      setState(() {
+        listTasks.add(textController.text);
+        textController.clear();
+      });
+    }
   }
 
   @override
@@ -45,10 +49,31 @@ class _HomePageToDo extends State<HomePageToDo> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: listTasks.map((task) => Text(task)).toList(),
+          children: [
+            TextField(
+              controller: textController,
+              decoration: const InputDecoration(
+                labelText: 'Write the task here',
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: listTasks.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(listTasks[index]),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
