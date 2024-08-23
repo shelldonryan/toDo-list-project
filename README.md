@@ -2,7 +2,7 @@
 
 Project to practice this technology, with a to-do list
 
---
+---
 
 I`m going to create a simple task list application where the user can add, view and remove tasks.
 
