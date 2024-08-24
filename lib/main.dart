@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         useMaterial3: false,
       ),
-      home: HomePageToDo(title: 'To-do List Page'),
+      home: const HomePageToDo(title: 'To-do List Page'),
     );
   }
 }
@@ -26,20 +26,26 @@ class HomePageToDo extends StatefulWidget {
   const HomePageToDo({super.key, required this.title});
 
   @override
-  _HomePageToDo createState() => _HomePageToDo();
+  State<HomePageToDo> createState() => _HomePageToDo();
 }
 
 class _HomePageToDo extends State<HomePageToDo> {
-  var listTasks = <String>[];
+  var listTasks = <Task>[];
   final TextEditingController textController = TextEditingController();
 
-  Future<void> _todo_task() async {
+  Future<void> _todoTask() async {
     if (textController.text.isNotEmpty) {
       setState(() {
-        listTasks.add(textController.text);
+        listTasks.add(Task(taskName: textController.text, isDone: false));
         textController.clear();
       });
     }
+  }
+
+  _taskDone(int index) {
+    setState(() {
+      listTasks[index].isDone = !listTasks[index].isDone;
+    });
   }
 
   @override
@@ -68,7 +74,20 @@ class _HomePageToDo extends State<HomePageToDo> {
                 itemCount: listTasks.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(listTasks[index]),
+                    leading: Checkbox(
+                      value: listTasks[index].isDone,
+                      onChanged: (bool? value) {
+                        _taskDone(index);
+                      },
+                    ),
+                    title: Text(
+                      listTasks[index].taskName,
+                      style: TextStyle(
+                        decoration: listTasks[index].isDone
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                      ),
+                    ),
                   );
                 },
               ),
@@ -77,10 +96,17 @@ class _HomePageToDo extends State<HomePageToDo> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _todo_task,
+        onPressed: _todoTask,
         tooltip: 'Create one more to-do task',
         child: const Icon(Icons.add_outlined),
       ),
     );
   }
+}
+
+class Task {
+  String taskName;
+  bool isDone;
+
+  Task({required this.taskName, required this.isDone});
 }
