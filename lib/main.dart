@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list_project/pages/home_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -12,32 +13,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'To-Do List',
       theme: ThemeData(
-        colorScheme:ColorScheme.fromSeed(seedColor: Colors.amber),
-        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
+        useMaterial3: false,
       ),
-      home: HomePageToDo(title: 'To-do List Page'),
+      home: const HomePage(),
     );
   }
 }
 
-class HomePageToDo extends StatefulWidget {
-  final String title;
 
-  const HomePageToDo({super.key, required this.title});
-
-  @override
-  _HomePageToDo createState() => _HomePageToDo();
-}
-
-class _HomePageToDo extends State<HomePageToDo> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-    );
-  }
-}
 
