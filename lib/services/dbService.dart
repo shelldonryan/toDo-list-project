@@ -37,7 +37,7 @@ class DatabaseService {
       CREATE TABLE $_tasksTableName (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         taskName TEXT NOT NULL,
-        isDone INTEGER NOT NULL,
+        isDone INTEGER NOT NULL
       )
     ''');
   }
