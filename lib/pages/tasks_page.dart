@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_project/services/dbService.dart';
+import 'package:todo_list_project/widgets/task_modal.dart';
 import '../models/task.dart';
 
 class TaskPageToDo extends StatefulWidget {
@@ -16,11 +17,11 @@ class _TaskPageToDo extends State<TaskPageToDo> {
 
   Future<void> _todoTask() async {
     if (textController.text.isNotEmpty) {
-        await _databaseService.addTask(textController.text);
+      await _databaseService.addTask(textController.text);
 
-        setState(() {
-          textController.clear();
-        });
+      setState(() {
+        textController.clear();
+      });
     }
   }
 
@@ -35,12 +36,26 @@ class _TaskPageToDo extends State<TaskPageToDo> {
     });
   }
 
+  void _showTaskOptions(BuildContext context, Task task) {
+    showModalBottomSheet(
+        context: context,
+
+        builder: (BuildContext context) {
+          return TaskOptionsModal(
+              onDelete: () async {
+                await _deleteTask(task.id);
+                Navigator.of(context).pop();
+              },
+              task: task);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Tasks Page | To-Do List"),
+        title: const Text("Tasks Page | To-Do List"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -58,39 +73,38 @@ class _TaskPageToDo extends State<TaskPageToDo> {
             ),
             Expanded(
               child: FutureBuilder(
-                future: _databaseService.getTasks(),
-                builder: (context, snapshot) {
-                  return ListView.builder(
-                    itemCount: snapshot.data?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      Task task = snapshot.data![index];
+                  future: _databaseService.getTasks(),
+                  builder: (context, snapshot) {
+                    return ListView.builder(
+                      itemCount: snapshot.data?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        Task task = snapshot.data![index];
 
-                      return ListTile(
-                        leading: Checkbox(
-                          value: task.isDone == 1,
-                          onChanged: (bool? value) {
-                            _taskDone(task.id, task.isDone);
-                          },
-                        ),
-                        onLongPress: () {
-                          _deleteTask(task.id);
-                        },
-                        title: Text(
-                          task.taskName,
-                          style: TextStyle(
-                            decoration: task.isDone == 1
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                            color: task.isDone == 0
-                                ? Colors.black
-                                : Colors.amber,
+                        return ListTile(
+                          leading: Checkbox(
+                            value: task.isDone == 1,
+                            onChanged: (bool? value) {
+                              _taskDone(task.id, task.isDone);
+                            },
                           ),
-                        ),
-                      );
-                    },
-                  );
-                }
-              ),
+                          onLongPress: () {
+                            _showTaskOptions(context, task);
+                          },
+                          title: Text(
+                            task.taskName,
+                            style: TextStyle(
+                              decoration: task.isDone == 1
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
+                              color: task.isDone == 0
+                                  ? Colors.black
+                                  : Colors.amber,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }),
             ),
           ],
         ),
