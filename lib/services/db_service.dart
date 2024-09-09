@@ -51,8 +51,6 @@ class DatabaseService {
       "isDone": 0,
     });
 
-
-    print('Tasks retrivied: $id');
     return true;
   }
 
