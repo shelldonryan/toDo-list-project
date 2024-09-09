@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_project/services/db_service.dart';
-import 'package:todo_list_project/widgets/task_modal.dart';
-import '../models/task.dart';
+import 'package:todo_list_project/widgets/index.dart';
+import '../models/index.dart';
 
 class TaskPageToDo extends StatefulWidget {
   const TaskPageToDo({super.key});
@@ -41,6 +41,9 @@ class _TaskPageToDo extends State<TaskPageToDo> {
         context: context,
         builder: (BuildContext context) {
           return TaskOptionsModal(
+              onUpdate: (Task value) async {
+                Navigator.of(context).pop();
+              },
               onDelete: () async {
                 await _deleteTask(task.id);
                 Navigator.of(context).pop();

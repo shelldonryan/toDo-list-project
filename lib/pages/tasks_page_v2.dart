@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_project/models/task.dart';
-import 'package:todo_list_project/widgets/task_modal.dart';
-import 'package:todo_list_project/widgets/task_tile.dart';
+import 'package:todo_list_project/models/index.dart';
+import 'package:todo_list_project/widgets/index.dart';
 
 class TaskPageTwo extends StatefulWidget {
   const TaskPageTwo({super.key});
@@ -34,35 +33,39 @@ class _TaskPageTwoState extends State<TaskPageTwo> {
         builder: (context) {
           return AlertDialog(
             title: const Text('Add new task'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  decoration:
-                      const InputDecoration(labelText: "what's the task name?"),
-                  onChanged: (value) {
-                    taskName = value;
-                  },
-                ),
-                TextField(
-                  decoration: const InputDecoration(
-                      labelText: "what's the description?"),
-                  onChanged: (value) {
-                    description = value;
-                  },
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (taskName.isNotEmpty) {
-                      _addTaskToList(taskName, description);
-                    }
-                  },
-                  child: const Icon(Icons.check),
-                ),
-              ],
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    decoration:
+                        const InputDecoration(labelText: "what's the task name?"),
+                    onChanged: (value) {
+                      taskName = value;
+                    },
+                  ),
+                  TextField(
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    decoration: const InputDecoration(
+                        labelText: "what's the description?"),
+                    onChanged: (value) {
+                      description = value;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (taskName.isNotEmpty) {
+                        _addTaskToList(taskName, description);
+                      }
+                    },
+                    child: const Icon(Icons.check),
+                  ),
+                ],
+              ),
             ),
           );
         });
@@ -74,6 +77,12 @@ class _TaskPageTwoState extends State<TaskPageTwo> {
         builder: (BuildContext context) {
           return TaskOptionsModal(
             task: task,
+            onUpdate: (Task value) async {
+              setState(() {
+                tasks[tasks.indexOf(task)] = value;
+              });
+              Navigator.pop(context);
+            },
             onDelete: () async {
               setState(() {
                 tasks.remove(task);
@@ -92,7 +101,7 @@ class _TaskPageTwoState extends State<TaskPageTwo> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text("Task List"),
-        elevation: 3,
+        elevation: 10,
       ),
       body: Container(
         margin: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
@@ -119,6 +128,8 @@ class _TaskPageTwoState extends State<TaskPageTwo> {
         onPressed: () {
           _showTaskAlert(context);
         },
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         icon: const Icon(Icons.task_alt),
         label: const Text(
           "Add Task",

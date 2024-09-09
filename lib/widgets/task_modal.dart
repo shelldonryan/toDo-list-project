@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-
-import '../models/task.dart';
+import '../models/index.dart';
 
 class TaskOptionsModal extends StatelessWidget {
   final Task task;
   final Future<void> Function() onDelete;
+  final ValueChanged<Task> onUpdate;
 
-  TaskOptionsModal({super.key, required this.task, required this.onDelete});
+  const TaskOptionsModal({
+    super.key,
+    required this.task,
+    required this.onDelete,
+    required this.onUpdate,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,16 +21,24 @@ class TaskOptionsModal extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            task.taskName,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          GestureDetector(
+            onDoubleTap: () {
+              
+            },
+            child: Text(
+              task.taskName,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
           const SizedBox(
-            height: 16,
+            height: 20,
           ),
           Text(task.description),
-          const SizedBox(
-            height: 16,
+          Visibility(
+            visible: task.description.isNotEmpty,
+            child: const SizedBox(
+              height: 40,
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

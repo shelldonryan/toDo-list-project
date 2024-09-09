@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:todo_list_project/models/task.dart';
+import 'package:todo_list_project/models/index.dart';
 
 class DatabaseService {
   // Builder with private access

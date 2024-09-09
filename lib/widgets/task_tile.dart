@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_project/widgets/task_modal.dart';
-import '../models/task.dart';
+import '../models/index.dart';
 
 class TaskTile extends StatelessWidget {
   final Task task;
