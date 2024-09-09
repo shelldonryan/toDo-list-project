@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_project/models/task.dart';
+import 'package:todo_list_project/widgets/task_modal.dart';
 import 'package:todo_list_project/widgets/task_tile.dart';
 
 class TaskPageTwo extends StatefulWidget {
@@ -67,25 +68,52 @@ class _TaskPageTwoState extends State<TaskPageTwo> {
         });
   }
 
+  _showTaskModal(BuildContext context, Task task) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return TaskOptionsModal(
+            task: task,
+            onDelete: () async {
+              setState(() {
+                tasks.remove(task);
+              });
+              Navigator.pop(context);
+            },
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text("Task List"),
         elevation: 3,
       ),
-      body: ListView.builder(
+      body: Container(
+        margin: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+        child: ListView.builder(
+          itemCount: tasks.length,
           itemBuilder: (context, index) {
             final task = tasks[index];
-            return TaskTile(task: task, onCheckBoxChanged: (isChecked) {
-              setState(() {
-                task.isDone = isChecked ? 1 : 0;
-              });
-            });
+            return TaskTile(
+              task: task,
+              onCheckBoxChanged: (isChecked) {
+                setState(() {
+                  task.isDone = isChecked ? 1 : 0;
+                });
+              },
+              onLongPress: (Task value) {
+                _showTaskModal(context, task);
+              },
+            );
           },
-          itemCount: tasks.length),
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {

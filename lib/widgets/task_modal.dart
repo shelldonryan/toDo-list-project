@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../models/task.dart';
 
 class TaskOptionsModal extends StatelessWidget {
-  final Future<void> Function() onDelete;
   final Task task;
+  final Future<void> Function() onDelete;
 
-  TaskOptionsModal({super.key, required this.onDelete, required this.task});
+  TaskOptionsModal({super.key, required this.task, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +23,18 @@ class TaskOptionsModal extends StatelessWidget {
           const SizedBox(
             height: 16,
           ),
-          const Text("task.description"),
+          Text(task.description),
           const SizedBox(
             height: 16,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(onPressed: () async {
-                await onDelete();
-              }, child: const Icon(Icons.delete))
+              ElevatedButton(
+                  onPressed: () async {
+                    await onDelete();
+                  },
+                  child: const Icon(Icons.delete))
             ],
           )
         ],

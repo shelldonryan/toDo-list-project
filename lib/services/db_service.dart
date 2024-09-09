@@ -46,7 +46,7 @@ class DatabaseService {
   Future<bool> addTask(String taskName) async {
     final db = await database;
 
-    final id = await db.insert(_tasksTableName, {
+    await db.insert(_tasksTableName, {
       "taskName": taskName,
       "isDone": 0,
     });
