@@ -37,6 +37,7 @@ class DatabaseService {
       CREATE TABLE $_tasksTableName (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         taskName TEXT NOT NULL,
+        description TEXT NOT NULL,
         isDone INTEGER NOT NULL
       )
     ''');
@@ -64,6 +65,7 @@ class DatabaseService {
         .map((taskObj) => Task(
             id: taskObj["id"] as int,
             taskName: taskObj["taskName"] as String,
+            description: taskObj["description"] as String,
             isDone: taskObj["isDone"] as int))
         .toList();
 
