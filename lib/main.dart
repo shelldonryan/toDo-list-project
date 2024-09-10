@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_project/pages/home_page.dart';
+import 'package:todo_list_project/pages/index.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'To-Do List',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF50CF01),),
         useMaterial3: false,
       ),
       home: const HomePage(),

@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:todo_list_project/models/task.dart';
+import 'package:todo_list_project/models/index.dart';
 
 class DatabaseService {
   // Builder with private access
@@ -29,6 +29,7 @@ class DatabaseService {
       version: 1,
       onCreate: _onCreate,
     );
+
     return database;
   }
 
@@ -37,22 +38,10 @@ class DatabaseService {
       CREATE TABLE $_tasksTableName (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         taskName TEXT NOT NULL,
+        description TEXT NOT NULL,
         isDone INTEGER NOT NULL
       )
     ''');
-  }
-
-  Future<bool> addTask(String taskName) async {
-    final db = await database;
-
-    final id = await db.insert(_tasksTableName, {
-      "taskName": taskName,
-      "isDone": 0,
-    });
-
-
-    print('Tasks retrivied: $id');
-    return true;
   }
 
   Future<List<Task>> getTasks() async {
@@ -64,10 +53,22 @@ class DatabaseService {
         .map((taskObj) => Task(
             id: taskObj["id"] as int,
             taskName: taskObj["taskName"] as String,
+            description: taskObj["description"] as String,
             isDone: taskObj["isDone"] as int))
         .toList();
 
     return tasks;
+  }
+
+  Future<bool> addTask(String taskName, String description) async {
+    final db = await database;
+
+    await db.insert(_tasksTableName, {
+      "taskName": taskName,
+      "description": description,
+      "isDone": 0,
+    });
+    return true;
   }
 
   Future<bool> updateTaskStatus(int id, int isDone) async {
@@ -87,9 +88,26 @@ class DatabaseService {
     return true;
   }
 
+  Future<bool> updateTask(Task task) async {
+    final db = await database;
+
+    await db.update(
+        _tasksTableName,
+        {
+          "taskName": task.taskName,
+          "description": task.description,
+          "isDone": task.isDone,
+        },
+        where: "id = ?",
+        whereArgs: [
+          task.id,
+        ]);
+
+    return true;
+  }
+
   void deleteTask(int id) async {
     final db = await database;
     await db.delete(_tasksTableName, where: "id = ?", whereArgs: [id]);
   }
-
 }
