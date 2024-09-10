@@ -117,7 +117,7 @@ class _TaskPageTwoState extends State<TaskPageTwo> {
                 });
               },
               onLongPress: (Task value) {
-                _showTaskModal(context, task);
+                _showTaskModal(context, value);
               },
             );
           },
