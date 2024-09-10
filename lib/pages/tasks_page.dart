@@ -1,54 +1,103 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list_project/models/index.dart';
 import 'package:todo_list_project/services/db_service.dart';
 import 'package:todo_list_project/widgets/index.dart';
-import '../models/index.dart';
 
-class TaskPageToDo extends StatefulWidget {
-  const TaskPageToDo({super.key});
+class TaskPage extends StatefulWidget {
+  const TaskPage({super.key});
 
   @override
-  State<TaskPageToDo> createState() => _TaskPageToDo();
+  State<TaskPage> createState() => _TaskPageState();
 }
 
-class _TaskPageToDo extends State<TaskPageToDo> {
+class _TaskPageState extends State<TaskPage> {
   final DatabaseService _databaseService = DatabaseService.instance;
 
-  final TextEditingController textController = TextEditingController();
-
-  Future<void> _todoTask() async {
-    if (textController.text.isNotEmpty) {
-      await _databaseService.addTask(textController.text);
-
-      setState(() {
-        textController.clear();
-      });
-    }
+  Future<void> _addTask(String taskName, String description) async {
+      await _databaseService.addTask(taskName, description);
   }
 
-  Future<void> _taskDone(int id, int isDone) async {
+  Future<void> _updateTaskStatus(int id, int isDone) async{
     await _databaseService.updateTaskStatus(id, isDone);
-    setState(() {});
   }
 
   Future<void> _deleteTask(int id) async {
-    setState(() {
-      _databaseService.deleteTask(id);
-    });
+    _databaseService.deleteTask(id);
   }
 
-  void _showTaskOptions(BuildContext context, Task task) {
+  Future<void> _updateTask(Task task) async {
+    await _databaseService.updateTask(task);
+  }
+
+  _showTaskAlert(BuildContext context) {
+    String taskName = '';
+    String description = '';
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Add new task'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    decoration:
+                        const InputDecoration(labelText: "what's the task name?"),
+                    onChanged: (value) {
+                      taskName = value;
+                    },
+                  ),
+                  TextField(
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    decoration: const InputDecoration(
+                        labelText: "what's the description?"),
+                    onChanged: (value) {
+                      description = value;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (taskName.isNotEmpty) {
+                        setState(() {
+                          _addTask(taskName, description);
+                        });
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Icon(Icons.check),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  _showTaskModal(BuildContext context, Task task) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
           return TaskOptionsModal(
-              onUpdate: (Task value) async {
-                Navigator.of(context).pop();
-              },
-              onDelete: () async {
-                await _deleteTask(task.id);
-                Navigator.of(context).pop();
-              },
-              task: task);
+            task: task,
+            onUpdate: (Task value) {
+              setState(() {
+                _updateTask(value);
+              });
+              Navigator.pop(context);
+            },
+            onDelete: () async {
+              setState(() {
+                _deleteTask(task.id);
+              });
+              Navigator.pop(context);
+            },
+          );
         });
   }
 
@@ -56,65 +105,49 @@ class _TaskPageToDo extends State<TaskPageToDo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Tasks Page | To-Do List"),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        title: const Text("Task List"),
+        elevation: 10,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            TextField(
-              controller: textController,
-              decoration: const InputDecoration(
-                labelText: 'Write the task here',
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: FutureBuilder(
-                  future: _databaseService.getTasks(),
-                  builder: (context, snapshot) {
-                    return ListView.builder(
-                      itemCount: snapshot.data?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        Task task = snapshot.data![index];
-
-                        return ListTile(
-                          leading: Checkbox(
-                            value: task.isDone == 1,
-                            onChanged: (bool? value) {
-                              _taskDone(task.id, task.isDone);
-                            },
-                          ),
-                          onLongPress: () {
-                            _showTaskOptions(context, task);
-                          },
-                          title: Text(
-                            task.taskName,
-                            style: TextStyle(
-                              decoration: task.isDone == 1
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
-                              color: task.isDone == 0
-                                  ? Colors.black
-                                  : Colors.amber,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }),
-            ),
-          ],
+      body: Container(
+        margin: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+        child: FutureBuilder(
+          future: _databaseService.getTasks(),
+          builder: (context, snapshot) {
+            return ListView.builder(
+              itemCount: snapshot.data?.length ?? 0,
+              itemBuilder: (context, index) {
+                final task = snapshot.data![index];
+                return TaskTile(
+                  task: task,
+                  onCheckBoxChanged: (isChecked) {
+                    setState(() {
+                      _updateTaskStatus(task.id, task.isDone);
+                    });
+                  },
+                  onLongPress: (Task value) {
+                    _showTaskModal(context, value);
+                  },
+                );
+              },
+            );
+          }
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _todoTask,
-        tooltip: 'Create one more to-do task',
-        child: const Icon(Icons.add_outlined),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          _showTaskAlert(context);
+        },
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        icon: const Icon(Icons.task_alt),
+        label: const Text(
+          "Add Task",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }

@@ -27,7 +27,11 @@ class TaskOptionsModal extends StatelessWidget {
               showDialog(
                   context: context,
                   builder: (context) {
-                    return EditTaskModal(task: task, onUpdate: onUpdate, typeEdition: 'title',);
+                    return EditTaskModal(
+                      task: task,
+                      onUpdate: onUpdate,
+                      typeEdition: 'title',
+                    );
                   });
             },
             child: Text(
@@ -43,7 +47,11 @@ class TaskOptionsModal extends StatelessWidget {
                 showDialog(
                     context: context,
                     builder: (context) {
-                      return EditTaskModal(task: task, onUpdate: onUpdate, typeEdition: 'description',);
+                      return EditTaskModal(
+                        task: task,
+                        onUpdate: onUpdate,
+                        typeEdition: 'description',
+                      );
                     });
               },
               child: Text(task.description)),
