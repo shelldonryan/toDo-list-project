@@ -13,3 +13,6 @@ I am going to create a simple task list application where users can add, view, a
 - The data is persisted in a database file, todo_list.db, using SQLite.
   - The data will be lost if the app is uninstalled.
 
+## Auth Screen
+- 
+
