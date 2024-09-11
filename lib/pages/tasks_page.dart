@@ -14,10 +14,10 @@ class _TaskPageState extends State<TaskPage> {
   final DatabaseService _databaseService = DatabaseService.instance;
 
   Future<void> _addTask(String taskName, String description) async {
-      await _databaseService.addTask(taskName, description);
+    await _databaseService.addTask(taskName, description);
   }
 
-  Future<void> _updateTaskStatus(int id, int isDone) async{
+  Future<void> _updateTaskStatus(int id, int isDone) async {
     await _databaseService.updateTaskStatus(id, isDone);
   }
 
@@ -43,8 +43,8 @@ class _TaskPageState extends State<TaskPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
-                    decoration:
-                        const InputDecoration(labelText: "what's the task name?"),
+                    decoration: const InputDecoration(
+                        labelText: "what's the task name?"),
                     onChanged: (value) {
                       taskName = value;
                     },
@@ -101,25 +101,30 @@ class _TaskPageState extends State<TaskPage> {
         });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: const Text("Task List"),
-        elevation: 10,
+  _showListViewStatus(List<Task> tasks, String label) {
+    return Expanded(
+        child: Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
+        borderRadius: BorderRadius.circular(10),
       ),
-      body: Container(
-        margin: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-        child: FutureBuilder(
-          future: _databaseService.getTasks(),
-          builder: (context, snapshot) {
-            return ListView.builder(
-              itemCount: snapshot.data?.length ?? 0,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(
+              label,
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.outline),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: tasks.length,
               itemBuilder: (context, index) {
-                final task = snapshot.data![index];
+                final task = tasks[index];
                 return TaskTile(
                   task: task,
                   onCheckBoxChanged: (isChecked) {
@@ -132,9 +137,45 @@ class _TaskPageState extends State<TaskPage> {
                   },
                 );
               },
-            );
-          }
-        ),
+            ),
+          ),
+        ],
+      ),
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        title: const Text("Task List"),
+        elevation: 10,
+      ),
+      body: Container(
+        margin: const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 80),
+        child: FutureBuilder(
+            future: _databaseService.getTasks(),
+            builder: (context, snapshot) {
+              final tasks = snapshot.data!;
+
+              final pendingTasks =
+                  tasks.where((task) => task.isDone == 0).toList();
+              final doneTasks =
+                  tasks.where((task) => task.isDone == 1).toList();
+
+              return Column(
+                children: [
+                  _showListViewStatus(pendingTasks, 'Pending'),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  _showListViewStatus(doneTasks, 'Finished'),
+                ],
+              );
+            }),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
