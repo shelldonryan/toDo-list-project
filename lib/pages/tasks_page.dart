@@ -159,6 +159,10 @@ class _TaskPageState extends State<TaskPage> {
         child: FutureBuilder(
             future: _databaseService.getTasks(),
             builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
               final tasks = snapshot.data!;
 
               final pendingTasks =
