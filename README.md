@@ -5,6 +5,7 @@ I am going to create a simple task list application where users can add, view, a
 
 ##  Home Screen
 - Displays a list of user-created tasks.
+- The tasks is within a block, whether a pending block or finished block
 - Each task can be marked as completed or not.
 - The user on pressed over the task, and it's show a dialog screen to view the name and description
   - To delete a task, the user must click a delete button.
