@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_project/features/task/widgets/edit_task_modal.dart';
-import 'package:todo_list_project/models/index.dart';
+import 'package:todo_list_project/features/task/models/index.dart';
 
 class TaskOptionsModal extends StatelessWidget {
   final Task task;

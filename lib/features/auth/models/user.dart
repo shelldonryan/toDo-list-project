@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:todo_list_project/models/index.dart';
+import 'package:todo_list_project/features/task/models/index.dart';
 
 class User {
   final int id;
