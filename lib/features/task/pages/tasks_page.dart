@@ -12,6 +12,8 @@ class TaskPage extends StatefulWidget {
 
 class _TaskPageState extends State<TaskPage> {
   final DatabaseService _databaseService = DatabaseService.instance;
+  late Future<List<Task>> _tasksFuture;
+  late bool isGetOneTime = false;
 
   Future<void> _addTask(String taskName, String description) async {
     await _databaseService.addTask(taskName, description);
@@ -23,6 +25,13 @@ class _TaskPageState extends State<TaskPage> {
 
   Future<void> _deleteTask(int id) async {
     _databaseService.deleteTask(id);
+  }
+
+  Future<List<Task>> _getTasks() async {
+    setState(() {
+      _tasksFuture = _databaseService.getTasks();
+    });
+    return _tasksFuture;
   }
 
   Future<void> _updateTask(Task task) async {
@@ -157,9 +166,10 @@ class _TaskPageState extends State<TaskPage> {
       body: Container(
         margin: const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 80),
         child: FutureBuilder(
-            future: _databaseService.getTasks(),
+            future: _getTasks(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+              if(snapshot.connectionState == ConnectionState.waiting && isGetOneTime == false) {
+                isGetOneTime = true;
                 return const Center(child: CircularProgressIndicator());
               }
 

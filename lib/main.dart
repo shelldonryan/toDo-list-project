@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_project/features/task/pages/index.dart';
+import 'package:todo_list_project/features/auth/pages/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:todo_list_project/shared/themes/index.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -22,10 +23,10 @@ class MyApp extends StatelessWidget {
       title: 'To-Do List',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF50CF01),),
+        colorScheme: ColorScheme.fromSeed(seedColor: MyColors.greenSofTec),
         useMaterial3: false,
       ),
-      home: const TaskPage(),
+      home: const AuthPage(),
     );
   }
 }
