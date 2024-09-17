@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/features/auth/pages/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:todo_list_project/shared/themes/index.dart';
 import 'firebase_options.dart';
+import 'package:todo_list_project/shared/themes/index.dart';
+import 'package:provider/provider.dart';
+import 'core/database/index.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,7 +14,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      Provider(create: (_) => DatabaseService.instance),
+      Provider(create: (context) => TaskStore(Provider.of<DatabaseService>(context, listen: false))),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -30,6 +39,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-

@@ -3,6 +3,8 @@ import 'package:path/path.dart';
 import 'package:todo_list_project/features/task/models/index.dart';
 
 class DatabaseService {
+  final String _tasksTableName = "tasks";
+
   // Builder with private access
   DatabaseService._constructor();
 
@@ -12,7 +14,6 @@ class DatabaseService {
   //SQLite instance
   static Database? _db;
 
-  final String _tasksTableName = "tasks";
 
   Future<Database> get database async {
     if (_db != null) return _db!;
