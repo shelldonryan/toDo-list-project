@@ -3,6 +3,8 @@ import 'package:todo_list_project/features/task/models/index.dart';
 import 'package:todo_list_project/core/database/db_service.dart';
 import 'package:todo_list_project/features/task/widgets/index.dart';
 
+import '../../../shared/themes/index.dart';
+
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
 
@@ -158,7 +160,7 @@ class _TaskPageState extends State<TaskPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: MyColors.greenSofTec,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text("Task List"),
         elevation: 10,
@@ -196,7 +198,7 @@ class _TaskPageState extends State<TaskPage> {
         onPressed: () {
           _showTaskAlert(context);
         },
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: MyColors.greenSofTec,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         icon: const Icon(Icons.task_alt),
         label: const Text(
