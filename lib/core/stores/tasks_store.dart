@@ -39,25 +39,21 @@ abstract class _TaskStoreBase with Store {
   }
 
   @action
-  Future<void> updateTaskStatus(Task task) async{
-    _db.updateTaskStatus(task.id, task.isDone);
+  Future<void> updateTaskStatus(int id, int isDone) async{
+    _db.updateTaskStatus(id, isDone);
 
-    int indexTaskSearch = tasks.indexOf(task);
-
-    tasks[indexTaskSearch].isDone == 0 ? tasks[indexTaskSearch].isDone = 1: tasks[indexTaskSearch].isDone = 0;
+    int indexTaskUpdate = tasks.indexWhere((task) => task.id == id);
+    tasks[indexTaskUpdate].isDone = isDone;
   }
 
   @action
-  Future<void> updateTask(Task task) async {
-    _db.updateTask(task);
+  Future<void> updateTask(int id, String taskName, String taskDescription) async {
+    _db.updateTask(id, taskName, taskDescription);
 
-    Task taskToUpdate = tasks[tasks.indexOf(task)];
+    int indexTaskUpdate = tasks.indexWhere((task) => task.id == id);
 
-    if (taskToUpdate.taskName != task.taskName) {
-      taskToUpdate.taskName = task.taskName;
-    } else if (taskToUpdate.description != task.description) {
-      taskToUpdate.description = task.description;
-    }
+    tasks[indexTaskUpdate].taskName = taskName;
+    tasks[indexTaskUpdate].description = taskDescription;
   }
 
 }

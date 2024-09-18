@@ -90,19 +90,18 @@ class DatabaseService {
     return true;
   }
 
-  Future<bool> updateTask(Task task) async {
+  Future<bool> updateTask(int id, String taskName, String description) async {
     final db = await database;
 
     await db.update(
         _tasksTableName,
         {
-          "taskName": task.taskName,
-          "description": task.description,
-          "isDone": task.isDone,
+          "taskName": taskName,
+          "description": description,
         },
         where: "id = ?",
         whereArgs: [
-          task.id,
+          id,
         ]);
 
     return true;

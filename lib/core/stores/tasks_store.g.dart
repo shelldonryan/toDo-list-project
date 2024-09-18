@@ -53,17 +53,18 @@ mixin _$TaskStore on _TaskStoreBase, Store {
       AsyncAction('_TaskStoreBase.updateTaskStatus', context: context);
 
   @override
-  Future<void> updateTaskStatus(Task task) {
+  Future<void> updateTaskStatus(int id, int isDone) {
     return _$updateTaskStatusAsyncAction
-        .run(() => super.updateTaskStatus(task));
+        .run(() => super.updateTaskStatus(id, isDone));
   }
 
   late final _$updateTaskAsyncAction =
       AsyncAction('_TaskStoreBase.updateTask', context: context);
 
   @override
-  Future<void> updateTask(Task task) {
-    return _$updateTaskAsyncAction.run(() => super.updateTask(task));
+  Future<void> updateTask(int id, String taskName, String taskDescription) {
+    return _$updateTaskAsyncAction
+        .run(() => super.updateTask(id, taskName, taskDescription));
   }
 
   @override

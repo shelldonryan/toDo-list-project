@@ -3,7 +3,6 @@ import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/features/task/models/index.dart';
-import 'package:todo_list_project/features/task/widgets/index.dart';
 import '../../../shared/themes/index.dart';
 
 class TaskPage extends StatefulWidget {
@@ -50,9 +49,7 @@ class _TaskPageState extends State<TaskPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (taskName.isNotEmpty) {
-                        setState(() {
-                          store.addTask(taskName, description);
-                        });
+                        store.addTask(taskName, description);
                         Navigator.pop(context);
                       }
                     },
@@ -65,23 +62,98 @@ class _TaskPageState extends State<TaskPage> {
         });
   }
 
-  _showTaskModal(BuildContext context, Task task) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return TaskOptionsModal(
-            task: task,
-            onUpdate: (Task value) {
-              setState(() {
-                // _updateTask(value);
-              });
-              Navigator.pop(context);
-            },
-          );
-        });
+  _showTaskModal(BuildContext context, Task task, TaskStore store) {
+    Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            task.taskName, 
+            style: const TextStyle(
+              fontSize: 20, 
+              fontWeight: FontWeight.bold
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(task.description),
+          Visibility(
+            visible: task.description.isEmpty, 
+            child: const SizedBox(
+              height: 40,
+            ),
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
+          children: [
+              ElevatedButton(
+                onPressed: () {
+                store.deleteTask(task.id);
+                Navigator.pop(context);
+                },
+                child: const Icon(Icons.delete),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder : (context) {
+                      TextEditingController titleController = TextEditingController(text: task.description);
+                      TextEditingController descriptionController = TextEditingController(text: task.description);
+                      return AlertDialog(
+                        title: const Text("Editing Task..."),
+                        content: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                controller: titleController,
+                                maxLines: null,
+                                keyboardType: TextInputType.multiline,
+                                decoration: const InputDecoration(
+                                  labelText: 'New Title',
+                                ),
+                                onSubmitted: (value) {
+                                  titleController.text = value;
+                                },
+                              ),
+                              const SizedBox(height: 12,),
+                              TextField(
+                                controller: descriptionController,
+                                maxLines: null,
+                                keyboardType: TextInputType.multiline,
+                                decoration: const InputDecoration(
+                                  labelText: 'New Descrition',
+                                ),
+                                onSubmitted: (value) {
+                                  descriptionController.text = value;
+                                },
+                              ),
+                              const SizedBox(height: 8,),
+                              ElevatedButton(
+                                onPressed: () {
+                                  store.updateTask(task.id, task.taskName, task.description);
+                                },
+                                child: const Icon(Icons.check)
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                  Navigator.pop(context);
+                },
+                child: const Icon(Icons.edit),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
-  _showListViewStatus(List<Task> tasks, String label) {
+  _showListViewStatus(List<Task> tasks, String label, TaskStore store) {
     return Expanded(
         child: Container(
       decoration: BoxDecoration(
@@ -105,15 +177,21 @@ class _TaskPageState extends State<TaskPage> {
               itemCount: tasks.length,
               itemBuilder: (context, index) {
                 final task = tasks[index];
-                return TaskTile(
-                  task: task,
-                  onCheckBoxChanged: (isChecked) {
-                    setState(() {
-                      // _updateTaskStatus(task.id, task.isDone);
-                    });
-                  },
-                  onLongPress: (Task value) {
-                    _showTaskModal(context, value);
+                return ListTile(
+                  title: Text(
+                    task.taskName,
+                    style: TextStyle(
+                        decoration: task.isDone == 1
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                        color: task.isDone == 0 
+                            ? Colors.black 
+                            : Colors.grey
+                            ),
+                  ),
+                  leading: Checkbox(value: task.isDone == 1, onChanged: (bool? isDone) => store.updateTaskStatus(task.id, isDone == true ? 1 :0)),
+                  onLongPress: () {
+                    showModalBottomSheet(context: context, builder: (BuildContext context) => _showTaskModal(context, task, store));
                   },
                 );
               },
@@ -141,7 +219,7 @@ class _TaskPageState extends State<TaskPage> {
         child: FutureBuilder(
             future: taskStore.loadTasks(),
             builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
 
@@ -154,11 +232,11 @@ class _TaskPageState extends State<TaskPage> {
 
               return Column(
                 children: [
-                  _showListViewStatus(pendingTasks, 'Pending'),
+                  _showListViewStatus(pendingTasks, 'Pending', taskStore),
                   const SizedBox(
                     height: 8,
                   ),
-                  _showListViewStatus(doneTasks, 'Finished'),
+                  _showListViewStatus(doneTasks, 'Finished', taskStore),
                 ],
               );
             }),
