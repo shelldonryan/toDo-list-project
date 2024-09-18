@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/features/task/models/index.dart';
@@ -14,9 +15,7 @@ class TaskPage extends StatefulWidget {
 
 class _TaskPageState extends State<TaskPage> {
 
-  late bool isGetOneTime = false;
-
-  _showTaskAlert(BuildContext context) {
+  _showTaskAlert(BuildContext context, TaskStore store) {
     String taskName = '';
     String description = '';
 
@@ -52,7 +51,7 @@ class _TaskPageState extends State<TaskPage> {
                     onPressed: () {
                       if (taskName.isNotEmpty) {
                         setState(() {
-                          // _addTask(taskName, description);
+                          store.addTask(taskName, description);
                         });
                         Navigator.pop(context);
                       }
@@ -75,12 +74,6 @@ class _TaskPageState extends State<TaskPage> {
             onUpdate: (Task value) {
               setState(() {
                 // _updateTask(value);
-              });
-              Navigator.pop(context);
-            },
-            onDelete: () async {
-              setState(() {
-                // _deleteTask(task.id);
               });
               Navigator.pop(context);
             },
@@ -148,8 +141,7 @@ class _TaskPageState extends State<TaskPage> {
         child: FutureBuilder(
             future: taskStore.loadTasks(),
             builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting && isGetOneTime == false) {
-                isGetOneTime = true;
+              if(snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
 
@@ -174,7 +166,7 @@ class _TaskPageState extends State<TaskPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          _showTaskAlert(context);
+          _showTaskAlert(context, taskStore);
         },
         backgroundColor: MyColors.greenSofTec,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,

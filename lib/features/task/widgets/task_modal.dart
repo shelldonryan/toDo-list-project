@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_list_project/core/stores/index.dart';
 import 'package:todo_list_project/features/task/widgets/edit_task_modal.dart';
 import 'package:todo_list_project/features/task/models/index.dart';
 
 class TaskOptionsModal extends StatelessWidget {
   final Task task;
-  final Future<void> Function() onDelete;
   final ValueChanged<Task> onUpdate;
 
   const TaskOptionsModal({
     super.key,
     required this.task,
-    required this.onDelete,
     required this.onUpdate,
   });
 
   @override
   Widget build(BuildContext context) {
+    final taskStore = Provider.of<TaskStore>(context);
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -65,8 +66,9 @@ class TaskOptionsModal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                  onPressed: () async {
-                    await onDelete();
+                  onPressed: () {
+                    taskStore.deleteTask(task.id);
+                    Navigator.pop(context);
                   },
                   child: const Icon(Icons.delete))
             ],
