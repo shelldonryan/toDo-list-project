@@ -15,6 +15,7 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+  late final TaskStore taskStore;
 
   _showEditTaskAlert(BuildContext context, Task task, TaskStore store) {
     showDialog(
@@ -48,7 +49,7 @@ class _TaskPageState extends State<TaskPage> {
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
                   decoration: const InputDecoration(
-                    labelText: 'New Descrition',
+                    labelText: 'New Description',
                   ),
                   onSubmitted: (value) {
                     descriptionController.text = value;
@@ -59,8 +60,8 @@ class _TaskPageState extends State<TaskPage> {
                 ),
                 ElevatedButton(
                     onPressed: () {
-                      store.updateTask(
-                          task.id, task.taskName, task.description);
+                      store.updateTask(task.id, titleController.text,
+                          descriptionController.text);
                       titleController.clear();
                       descriptionController.clear();
                       Navigator.pop(context);
@@ -157,7 +158,7 @@ class _TaskPageState extends State<TaskPage> {
             ));
   }
 
-  showListViewStatus(List<Task> tasks, String label, TaskStore store) {
+  showListViewStatus(String label, TaskStore store) {
     return Expanded(
         child: Container(
       decoration: BoxDecoration(
@@ -178,22 +179,23 @@ class _TaskPageState extends State<TaskPage> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: tasks.length,
+              itemCount: store.tasks.length,
               itemBuilder: (context, index) {
-                final task = tasks[index];
+                final task = store.tasks[index];
                 return ListTile(
                   title: Text(
                     task.taskName,
                     style: TextStyle(
-                        decoration: task.isDone == 1
+                        decoration: task.isDone
                             ? TextDecoration.lineThrough
                             : TextDecoration.none,
-                        color: task.isDone == 0 ? Colors.black : Colors.grey),
+                        color: task.isDone ? Colors.black : Colors.grey),
                   ),
                   leading: Checkbox(
-                      value: task.isDone == 1,
-                      onChanged: (bool? isDone) => store.updateTaskStatus(
-                          task.id, isDone == true ? 1 : 0)),
+                      value: task.isDone,
+                      onChanged: (bool? isDone) =>
+                          store.updateTaskStatus(task.id, isDone!)
+                  ),
                   onLongPress: () {
                     _showTaskModal(context, task, store);
                   },
@@ -212,13 +214,13 @@ class _TaskPageState extends State<TaskPage> {
   @override
   void initState() {
     super.initState();
-    final taskStore = Provider.of<TaskStore>(context, listen: false);
+    taskStore = Provider.of<TaskStore>(context, listen: false);
     taskStore.loadTasks();
   }
 
   @override
   Widget build(BuildContext context) {
-    final taskStore = Provider.of<TaskStore>(context, listen: false);
+    final taskStore = Provider.of<TaskStore>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -229,26 +231,23 @@ class _TaskPageState extends State<TaskPage> {
         elevation: 10,
       ),
       body: Observer(builder: (_) {
-        final tasks = taskStore.tasks;
+        List<Task> tasks = taskStore.tasks;
+
+        final pendingTasks = tasks.where((task) => !task.isDone).toList();
+        final doneTasks = tasks.where((task) => task.isDone).toList();
 
         return Container(
-          margin:
+          padding:
               const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 80),
-          child: Builder(builder: (_) {
-            final pendingTasks =
-                tasks.where((task) => task.isDone == 0).toList();
-            final doneTasks = tasks.where((task) => task.isDone == 1).toList();
-
-            return Column(
-              children: [
-                showListViewStatus(pendingTasks, 'Pending', taskStore),
-                const SizedBox(
-                  height: 8,
-                ),
-                showListViewStatus(doneTasks, 'Finished', taskStore),
-              ],
-            );
-          }),
+          child: Column(
+            children: [
+              showListViewStatus('Pending', taskStore),
+              const SizedBox(
+                height: 8,
+              ),
+              showListViewStatus('Finished', taskStore),
+            ],
+          ),
         );
       }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

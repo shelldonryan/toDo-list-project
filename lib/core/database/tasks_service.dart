@@ -37,7 +37,7 @@ class DatabaseService {
   _onCreate(db, version) async {
     await db.execute('''
       CREATE TABLE $_tasksTableName (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id TEXT PRIMARY KEY,
         taskName TEXT NOT NULL,
         description TEXT NOT NULL,
         isDone INTEGER NOT NULL
@@ -52,19 +52,20 @@ class DatabaseService {
 
     List<Task> tasks = data
         .map((taskObj) => Task(
-            id: taskObj["id"] as int,
+            id: taskObj["id"] as String,
             taskName: taskObj["taskName"] as String,
             description: taskObj["description"] as String,
-            isDone: taskObj["isDone"] as int))
+            isDone: taskObj["isDone"] == 1 ? true : false))
         .toList();
 
     return tasks;
   }
 
-  Future<bool> addTask(String taskName, String description) async {
+  Future<bool> addTask(String id, String taskName, String description) async {
     final db = await database;
 
     await db.insert(_tasksTableName, {
+      "id": id,
       "taskName": taskName,
       "description": description,
       "isDone": 0,
@@ -73,13 +74,13 @@ class DatabaseService {
     return true;
   }
 
-  Future<bool> updateTaskStatus(int id, int isDone) async {
+  Future<bool> updateTaskStatus(String id, bool isDone) async {
     final db = await database;
 
     await db.update(
       _tasksTableName,
       {
-        "isDone": isDone == 0 ? 1 : 0,
+        "isDone": isDone == true ? 1 : 0,
       },
       where: "id = ?",
       whereArgs: [
@@ -90,7 +91,7 @@ class DatabaseService {
     return true;
   }
 
-  Future<bool> updateTask(int id, String taskName, String description) async {
+  Future<bool> updateTask(String id, String taskName, String description) async {
     final db = await database;
 
     await db.update(
@@ -107,7 +108,7 @@ class DatabaseService {
     return true;
   }
 
-  Future<void> deleteTask(int id) async {
+  Future<void> deleteTask(String id) async {
     final db = await database;
     await db.delete(_tasksTableName, where: "id = ?", whereArgs: [id]);
   }

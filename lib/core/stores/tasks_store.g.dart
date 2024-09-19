@@ -28,13 +28,13 @@ mixin _$TaskStore on _TaskStoreBase, Store {
   late final _$tasksAtom = Atom(name: '_TaskStoreBase.tasks', context: context);
 
   @override
-  List<Task> get tasks {
+  ObservableList<Task> get tasks {
     _$tasksAtom.reportRead();
     return super.tasks;
   }
 
   @override
-  set tasks(List<Task> value) {
+  set tasks(ObservableList<Task> value) {
     _$tasksAtom.reportWrite(value, super.tasks, () {
       super.tasks = value;
     });
@@ -60,7 +60,7 @@ mixin _$TaskStore on _TaskStoreBase, Store {
       AsyncAction('_TaskStoreBase.deleteTask', context: context);
 
   @override
-  Future<void> deleteTask(int id) {
+  Future<void> deleteTask(String id) {
     return _$deleteTaskAsyncAction.run(() => super.deleteTask(id));
   }
 
@@ -68,7 +68,7 @@ mixin _$TaskStore on _TaskStoreBase, Store {
       AsyncAction('_TaskStoreBase.updateTaskStatus', context: context);
 
   @override
-  Future<void> updateTaskStatus(int id, int isDone) {
+  Future<void> updateTaskStatus(String id, bool isDone) {
     return _$updateTaskStatusAsyncAction
         .run(() => super.updateTaskStatus(id, isDone));
   }
@@ -77,7 +77,7 @@ mixin _$TaskStore on _TaskStoreBase, Store {
       AsyncAction('_TaskStoreBase.updateTask', context: context);
 
   @override
-  Future<void> updateTask(int id, String taskName, String taskDescription) {
+  Future<void> updateTask(String id, String taskName, String taskDescription) {
     return _$updateTaskAsyncAction
         .run(() => super.updateTask(id, taskName, taskDescription));
   }

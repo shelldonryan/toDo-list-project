@@ -1,4 +1,5 @@
 import 'package:mobx/mobx.dart';
+import 'package:uuid/uuid.dart';
 import '../database/tasks_service.dart';
 import '../../features/task/models/index.dart';
 
@@ -8,6 +9,7 @@ class TaskStore = _TaskStoreBase with _$TaskStore;
 
 abstract class _TaskStoreBase with Store {
   final DatabaseService _db;
+  final Uuid uuid = const Uuid();
 
   _TaskStoreBase(this._db);
 
@@ -15,40 +17,49 @@ abstract class _TaskStoreBase with Store {
   bool isGetOneTime = false;
 
   @observable
-  List<Task> tasks = [];
+  ObservableList<Task> tasks = ObservableList<Task>();
 
   @action
   Future<void> loadTasks() async {
     isGetOneTime = true;
     final allTasks = await _db.getTasks();
     tasks.clear();
-    tasks.addAll(allTasks);
+
+    if (allTasks.isNotEmpty) {
+      tasks.addAll(allTasks);
+    }
   }
 
   @action
   Future<void> addTask(String taskName, String description) async {
-    await _db.addTask(taskName, description);
+    String id = uuid.v4();
+    await _db.addTask(id, taskName, description);
 
-    tasks.add(Task(id: tasks.length + 1, taskName: taskName, isDone: 0, description: description));
+    tasks.add(Task(
+        id: id,
+        taskName: taskName,
+        isDone: false,
+        description: description));
   }
 
   @action
-  Future<void> deleteTask(int id) async{
+  Future<void> deleteTask(String id) async {
     await _db.deleteTask(id);
 
     tasks.remove(tasks.firstWhere((task) => task.id == id));
   }
 
   @action
-  Future<void> updateTaskStatus(int id, int isDone) async{
+  Future<void> updateTaskStatus(String id, bool isDone) async {
     await _db.updateTaskStatus(id, isDone);
 
     int indexTaskUpdate = tasks.indexWhere((task) => task.id == id);
-    tasks[indexTaskUpdate].isDone = isDone == 0 ? 1 : 0;
+    tasks[indexTaskUpdate].isDone = isDone;
   }
 
   @action
-  Future<void> updateTask(int id, String taskName, String taskDescription) async {
+  Future<void> updateTask(
+      String id, String taskName, String taskDescription) async {
     await _db.updateTask(id, taskName, taskDescription);
 
     int indexTaskUpdate = tasks.indexWhere((task) => task.id == id);
@@ -56,5 +67,4 @@ abstract class _TaskStoreBase with Store {
     tasks[indexTaskUpdate].taskName = taskName;
     tasks[indexTaskUpdate].description = taskDescription;
   }
-
 }
