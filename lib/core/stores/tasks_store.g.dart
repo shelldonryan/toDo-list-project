@@ -25,6 +25,21 @@ mixin _$TaskStore on _TaskStoreBase, Store {
     });
   }
 
+  late final _$tasksAtom = Atom(name: '_TaskStoreBase.tasks', context: context);
+
+  @override
+  List<Task> get tasks {
+    _$tasksAtom.reportRead();
+    return super.tasks;
+  }
+
+  @override
+  set tasks(List<Task> value) {
+    _$tasksAtom.reportWrite(value, super.tasks, () {
+      super.tasks = value;
+    });
+  }
+
   late final _$loadTasksAsyncAction =
       AsyncAction('_TaskStoreBase.loadTasks', context: context);
 
@@ -70,7 +85,8 @@ mixin _$TaskStore on _TaskStoreBase, Store {
   @override
   String toString() {
     return '''
-isGetOneTime: ${isGetOneTime}
+isGetOneTime: ${isGetOneTime},
+tasks: ${tasks}
     ''';
   }
 }

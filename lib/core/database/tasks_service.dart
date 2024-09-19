@@ -107,7 +107,7 @@ class DatabaseService {
     return true;
   }
 
-  void deleteTask(int id) async {
+  Future<void> deleteTask(int id) async {
     final db = await database;
     await db.delete(_tasksTableName, where: "id = ?", whereArgs: [id]);
   }
