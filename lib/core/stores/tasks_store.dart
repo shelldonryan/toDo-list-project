@@ -53,8 +53,10 @@ abstract class _TaskStoreBase with Store {
   Future<void> updateTaskStatus(String id, bool isDone) async {
     await _db.updateTaskStatus(id, isDone);
 
-    int indexTaskUpdate = tasks.indexWhere((task) => task.id == id);
-    tasks[indexTaskUpdate].isDone = isDone;
+    
+
+    Task taskToUpdate = tasks.firstWhere((task) => task.id == id);
+    taskToUpdate.isDone = isDone;
   }
 
   @action

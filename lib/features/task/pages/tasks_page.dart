@@ -158,7 +158,7 @@ class _TaskPageState extends State<TaskPage> {
             ));
   }
 
-  showListViewStatus(String label, TaskStore store) {
+  showListViewStatus(List<Task> tasks, String label, TaskStore store) {
     return Expanded(
         child: Container(
       decoration: BoxDecoration(
@@ -179,9 +179,9 @@ class _TaskPageState extends State<TaskPage> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: store.tasks.length,
+              itemCount: tasks.length,
               itemBuilder: (context, index) {
-                final task = store.tasks[index];
+                final task = tasks[index];
                 return ListTile(
                   title: Text(
                     task.taskName,
@@ -241,11 +241,11 @@ class _TaskPageState extends State<TaskPage> {
               const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 80),
           child: Column(
             children: [
-              showListViewStatus('Pending', taskStore),
+              showListViewStatus(pendingTasks, 'Pending', taskStore),
               const SizedBox(
                 height: 8,
               ),
-              showListViewStatus('Finished', taskStore),
+              showListViewStatus(doneTasks, 'Finished', taskStore),
             ],
           ),
         );
