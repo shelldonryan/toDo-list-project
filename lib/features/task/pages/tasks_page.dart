@@ -160,55 +160,55 @@ class _TaskPageState extends State<TaskPage> {
 
   showListViewStatus(List<Task> tasks, String label, TaskStore store) {
     return Expanded(
-        child: Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).colorScheme.outline),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              label,
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.outline),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Theme.of(context).colorScheme.outline),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                label,
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.outline),
+              ),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: tasks.length,
-              itemBuilder: (context, index) {
-                final task = tasks[index];
-                return ListTile(
-                  title: Text(
-                    task.taskName,
-                    style: TextStyle(
-                        decoration: task.isDone
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
-                        color: task.isDone ? Colors.black : Colors.grey),
-                  ),
-                  leading: Checkbox(
-                      value: task.isDone,
-                      onChanged: (bool? isDone) =>
-                          store.updateTaskStatus(task.id, isDone!)
-                  ),
-                  onLongPress: () {
-                    _showTaskModal(context, task, store);
+            Expanded(
+              child: ListView.builder(
+                  itemCount: tasks.length,
+                  itemBuilder: (context, index) {
+                    final task = tasks[index];
+                    return ListTile(
+                      title: Text(
+                        task.taskName,
+                        style: TextStyle(
+                            decoration: task.isDone
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                            color: !task.isDone ? Colors.black : Colors.grey),
+                      ),
+                      leading: Checkbox(
+                          value: task.isDone,
+                          onChanged: (bool? isDone) =>
+                              store.updateTaskStatus(task.id, isDone!)),
+                      onLongPress: () {
+                        _showEditTaskAlert(context, task, store);
+                      },
+                      onTap: () {
+                        _showTaskModal(context, task, store);
+                      },
+                    );
                   },
-                  onTap: () {
-                    _showEditTaskAlert(context, task, store);
-                  },
-                );
-              },
+                ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ));
+    );
   }
 
   @override
@@ -231,10 +231,13 @@ class _TaskPageState extends State<TaskPage> {
         elevation: 10,
       ),
       body: Observer(builder: (_) {
-        List<Task> tasks = taskStore.tasks;
+        bool isLoading = taskStore.isLoading;
+        List<Task> pendingTasks = taskStore.tasks.where((task) => !task.isDone).toList();
+        List<Task> doneTasks = taskStore.tasks.where((task) => task.isDone).toList();
 
-        final pendingTasks = tasks.where((task) => !task.isDone).toList();
-        final doneTasks = tasks.where((task) => task.isDone).toList();
+        if (isLoading) {
+          return const Center(child: LinearProgressIndicator());
+        }
 
         return Container(
           padding:

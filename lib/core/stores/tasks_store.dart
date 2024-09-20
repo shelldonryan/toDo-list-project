@@ -14,20 +14,22 @@ abstract class _TaskStoreBase with Store {
   _TaskStoreBase(this._db);
 
   @observable
-  bool isGetOneTime = false;
+  bool isLoading = false;
 
   @observable
   ObservableList<Task> tasks = ObservableList<Task>();
 
   @action
   Future<void> loadTasks() async {
-    isGetOneTime = true;
+    isLoading = true;
     final allTasks = await _db.getTasks();
     tasks.clear();
 
     if (allTasks.isNotEmpty) {
       tasks.addAll(allTasks);
     }
+
+    isLoading = false;
   }
 
   @action
@@ -53,20 +55,29 @@ abstract class _TaskStoreBase with Store {
   Future<void> updateTaskStatus(String id, bool isDone) async {
     await _db.updateTaskStatus(id, isDone);
 
-    
+    isLoading = true;
+
+    int taskIndex = tasks.indexWhere((task) => task.id == id);
 
     Task taskToUpdate = tasks.firstWhere((task) => task.id == id);
     taskToUpdate.isDone = isDone;
+
+    tasks[taskIndex] = taskToUpdate;
+
+    isLoading = false;
   }
 
   @action
-  Future<void> updateTask(
-      String id, String taskName, String taskDescription) async {
+  Future<void> updateTask(String id, String taskName, String taskDescription) async {
     await _db.updateTask(id, taskName, taskDescription);
+    
+    isLoading = true;
 
-    int indexTaskUpdate = tasks.indexWhere((task) => task.id == id);
+    Task taskUpdate = tasks.firstWhere((task) => task.id == id);
 
-    tasks[indexTaskUpdate].taskName = taskName;
-    tasks[indexTaskUpdate].description = taskDescription;
+    taskUpdate.taskName = taskName;
+    taskUpdate.description = taskDescription;
+    
+    isLoading = false;
   }
 }
