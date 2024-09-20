@@ -4,6 +4,7 @@ import 'package:todo_list_project/features/task/models/index.dart';
 
 class DatabaseService {
   final String _tasksTableName = "tasks";
+  final String _usersTableName = "users";
 
   // Builder with private access
   DatabaseService._constructor();
@@ -36,12 +37,27 @@ class DatabaseService {
 
   _onCreate(db, version) async {
     await db.execute('''
+      CREATE TABLE $_usersTableName (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT,
+        password TEXT NOT NULL,
+        token TEXT,
+        type TEXT NOT NULL DEFAULT 'support'
+      )
+    ''');
+    await db.execute('''
       CREATE TABLE $_tasksTableName (
         id TEXT PRIMARY KEY,
         taskName TEXT NOT NULL,
         description TEXT NOT NULL,
-        isDone INTEGER NOT NULL
+        isDone INTEGER NOT NULL,
+        userId TEXT NOT NULL,
+        FOREIGN KEY(userId) REFERENCES users(id)
       )
+    ''');
+    await db.insert('''
+      INSERT INTO $_usersTableName (id, name, password, type) VALUES ('shelduuidespecial', 'shelldonryan', 'shelldon1234', 'developer')
     ''');
   }
 

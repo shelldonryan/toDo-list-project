@@ -13,7 +13,7 @@ class _AuthPageState extends State<AuthPage> {
   final _formKey = GlobalKey<FormState>();
   bool isSignupBottom = false;
 
-  _AuthButtonStage() {
+  _authButtonStage() {
     if (_formKey.currentState!.validate() && isSignupBottom) {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => const TaskPage()));
@@ -127,7 +127,7 @@ class _AuthPageState extends State<AuthPage> {
                     height: 24,
                   ),
                   ElevatedButton(
-                      onPressed: _AuthButtonStage,
+                      onPressed: _authButtonStage,
                       child: isSignupBottom
                           ? const Text("Sign-up")
                           : const Text("Sign-in")),

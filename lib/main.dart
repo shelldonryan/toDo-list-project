@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
-import 'package:todo_list_project/features/auth/pages/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:todo_list_project/features/task/pages/tasks_page.dart';
+import 'package:todo_list_project/features/auth/pages/auth_page.dart';
 import 'firebase_options.dart';
 import 'package:todo_list_project/shared/themes/index.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +35,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: MyColors.greenSofTec),
         useMaterial3: false,
       ),
-      home: const TaskPage(),
+      home: const AuthPage(),
     );
   }
 }

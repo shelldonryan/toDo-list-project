@@ -1,14 +1,12 @@
 import 'dart:convert';
-import 'package:todo_list_project/features/task/models/index.dart';
 
 class User {
-  final int id;
+  final String id;
   final String name;
   final String email;
   final String password;
   final String type;
   final String token;
-  final List<Task> tasks;
 
   User({
     required this.id,
@@ -17,20 +15,16 @@ class User {
     required this.password,
     required this.type,
     required this.token,
-    required this.tasks,
   });
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'] as int,
+      id: map['id'] as String,
       name: map['name'] ?? '',
       email: map['email'] ?? '',
       password: map['password'] ?? '',
       type: map['type'] ?? '',
       token: map['token'] ?? '',
-      tasks: List<Task>.from(
-          (map['tasks'] as List<dynamic>).map((task) => Task.fromMap(task))
-      ),
     );
   }
 
@@ -42,7 +36,6 @@ class User {
       'password': password,
       'type': type,
       'token': token,
-      'tasks': tasks.map((task) => task.toMap()).toList(),
     };
   }
 
