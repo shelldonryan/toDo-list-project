@@ -1,17 +1,17 @@
 import 'package:mobx/mobx.dart';
 import 'package:todo_list_project/core/services/tasks_service.dart';
 import 'package:uuid/uuid.dart';
-import '../../features/task/models/index.dart';
+import '../../features/task/models/task.dart';
 
 part 'tasks_store.g.dart';
 
-class TaskStore = _TaskStoreBase with _$TaskStore;
+class TaskStore = TaskStoreBase with _$TaskStore;
 
-abstract class _TaskStoreBase with Store {
+abstract class TaskStoreBase with Store {
   final TaskService _taskService;
   final Uuid uuid = const Uuid();
 
-  _TaskStoreBase(this._taskService);
+  TaskStoreBase(this._taskService);
 
   @observable
   bool isLoading = false;

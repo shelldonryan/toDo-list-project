@@ -1,8 +1,8 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:todo_list_project/features/auth/models/index.dart';
+import 'package:todo_list_project/features/auth/models/user.dart';
 import '../database/db.dart';
 
-class UsersService {
+class UserService {
   final String _usersTableName = "users";
   final DatabaseService dbService = DatabaseService.instance;
 
@@ -28,7 +28,7 @@ class UsersService {
     return users;
   }
 
-  Future<bool> addTask(Users user) async{
+  Future<bool> addUser(Users user) async{
     final db = await database;
 
     await db.insert(_usersTableName, {

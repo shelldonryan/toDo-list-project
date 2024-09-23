@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
-import 'package:todo_list_project/features/task/models/index.dart';
+import 'package:todo_list_project/features/task/models/task.dart';
 import '../../../shared/themes/index.dart';
 
 class TaskPage extends StatefulWidget {

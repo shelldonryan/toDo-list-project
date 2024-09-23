@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:todo_list_project/core/database/db.dart';
-import 'package:todo_list_project/features/task/models/index.dart';
+import 'package:todo_list_project/features/task/models/task.dart';
 
 class TaskService {
   final String _tasksTableName = "tasks";

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/features/auth/pages/auth_page.dart';
-import 'package:todo_list_project/features/task/pages/index.dart';
+import 'package:todo_list_project/features/task/pages/tasks_page.dart';
 
 class AuthCheck extends StatefulWidget {
   const AuthCheck({super.key});
@@ -10,10 +13,10 @@ class AuthCheck extends StatefulWidget {
 }
 
 class _AuthCheckState extends State<AuthCheck> {
-  final bool isAuth = false;
 
   @override
   Widget build(BuildContext context) {
-    return isAuth ? const TaskPage() : const AuthPage();
+    final authService = Provider.of<AuthStore>(context);
+    return Observer(builder: (_) => authService.userIsAuth ? const TaskPage() : const AuthPage());
   }
 }

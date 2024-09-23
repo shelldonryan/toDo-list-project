@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_project/features/task/pages/index.dart';
+import 'package:todo_list_project/features/task/pages/tasks_page.dart';
 import 'package:todo_list_project/shared/themes/index.dart';
 
 class AuthPage extends StatefulWidget {

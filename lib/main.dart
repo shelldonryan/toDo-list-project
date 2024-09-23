@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list_project/core/firebase/auth_check.dart';
 import 'package:todo_list_project/core/services/tasks_service.dart';
+import 'package:todo_list_project/core/services/user_service.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:todo_list_project/features/auth/pages/auth_page.dart';
+import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'firebase_options.dart';
 import 'package:todo_list_project/shared/themes/index.dart';
 import 'package:provider/provider.dart';
-import 'core/database/db.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +18,10 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
-      Provider(create: (_) => DatabaseService.instance),
+      Provider(create: (context) => TaskService(),),
+      Provider(create: (context) => UserService(),),
       Provider(create: (context) => TaskStore(Provider.of<TaskService>(context, listen: false))),
+      Provider(create: (context) => AuthStore(Provider.of<UserService>(context, listen: false))),
     ],
     child: const MyApp(),
   ));
@@ -36,7 +39,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: MyColors.greenSofTec),
         useMaterial3: false,
       ),
-      home: const AuthPage(),
+      home: const AuthCheck(),
     );
   }
 }
