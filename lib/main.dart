@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list_project/core/services/tasks_service.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:todo_list_project/features/auth/pages/auth_page.dart';
 import 'firebase_options.dart';
 import 'package:todo_list_project/shared/themes/index.dart';
 import 'package:provider/provider.dart';
-import 'core/database/index.dart';
+import 'core/database/db.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +18,7 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       Provider(create: (_) => DatabaseService.instance),
-      Provider(create: (context) => TaskStore(Provider.of<DatabaseService>(context, listen: false))),
+      Provider(create: (context) => TaskStore(Provider.of<TaskService>(context, listen: false))),
     ],
     child: const MyApp(),
   ));

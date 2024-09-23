@@ -1,6 +1,6 @@
 import 'package:mobx/mobx.dart';
+import 'package:todo_list_project/core/services/tasks_service.dart';
 import 'package:uuid/uuid.dart';
-import '../database/tasks_service.dart';
 import '../../features/task/models/index.dart';
 
 part 'tasks_store.g.dart';
@@ -8,10 +8,10 @@ part 'tasks_store.g.dart';
 class TaskStore = _TaskStoreBase with _$TaskStore;
 
 abstract class _TaskStoreBase with Store {
-  final DatabaseService _db;
+  final TaskService _taskService;
   final Uuid uuid = const Uuid();
 
-  _TaskStoreBase(this._db);
+  _TaskStoreBase(this._taskService);
 
   @observable
   bool isLoading = false;
@@ -22,7 +22,7 @@ abstract class _TaskStoreBase with Store {
   @action
   Future<void> loadTasks() async {
     isLoading = true;
-    final allTasks = await _db.getTasks();
+    final allTasks = await _taskService.getTasks();
     tasks.clear();
 
     if (allTasks.isNotEmpty) {
@@ -35,7 +35,7 @@ abstract class _TaskStoreBase with Store {
   @action
   Future<void> addTask(String taskName, String description) async {
     String id = uuid.v4();
-    await _db.addTask(id, taskName, description);
+    await _taskService.addTask(id, taskName, description);
 
     tasks.add(Task(
         id: id,
@@ -46,14 +46,14 @@ abstract class _TaskStoreBase with Store {
 
   @action
   Future<void> deleteTask(String id) async {
-    await _db.deleteTask(id);
+    await _taskService.deleteTask(id);
 
     tasks.remove(tasks.firstWhere((task) => task.id == id));
   }
 
   @action
   Future<void> updateTaskStatus(String id, bool isDone) async {
-    await _db.updateTaskStatus(id, isDone);
+    await _taskService.updateTaskStatus(id, isDone);
 
     isLoading = true;
 
@@ -69,7 +69,7 @@ abstract class _TaskStoreBase with Store {
 
   @action
   Future<void> updateTask(String id, String taskName, String taskDescription) async {
-    await _db.updateTask(id, taskName, taskDescription);
+    await _taskService.updateTask(id, taskName, taskDescription);
     
     isLoading = true;
 
