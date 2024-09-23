@@ -36,31 +36,27 @@ abstract class AuthStoreBase with Store {
 
   User? get user => _firebaseUser;
 
-  Future<bool> signup(String username, String password, String confirmPassword,
-      String email) async {
+  Future<bool> signup(String username, String password, String email) async {
     String id = uuid.v4();
 
     try {
-      if (password == confirmPassword) {
-        isLoading = true;
+      isLoading = true;
 
-        await _userService.addUser(Users(
-            id: id,
-            name: username,
-            password: password,
-            email: email,
-            type: 'support',
-            token: ''));
+      await _userService.addUser(Users(
+          id: id,
+          name: username,
+          password: password,
+          email: email,
+          type: 'support',
+          token: ''));
 
-        await _firebaseAuth.createUserWithEmailAndPassword(
-            email: email, password: password);
+      await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
 
-        isLoading = false;
+      isLoading = false;
 
-        return true;
-      }
+      return true;
 
-      return false;
     } catch (e) {
       isLoading = false;
       return false;

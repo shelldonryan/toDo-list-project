@@ -10,7 +10,7 @@ part of 'auth_store.dart';
 
 mixin _$AuthStore on AuthStoreBase, Store {
   late final _$_firebaseUserAtom =
-      Atom(name: '_AuthStoreBase._firebaseUser', context: context);
+      Atom(name: 'AuthStoreBase._firebaseUser', context: context);
 
   @override
   User? get _firebaseUser {
@@ -26,7 +26,7 @@ mixin _$AuthStore on AuthStoreBase, Store {
   }
 
   late final _$userIsAuthAtom =
-      Atom(name: '_AuthStoreBase.userIsAuth', context: context);
+      Atom(name: 'AuthStoreBase.userIsAuth', context: context);
 
   @override
   bool get userIsAuth {
@@ -42,7 +42,7 @@ mixin _$AuthStore on AuthStoreBase, Store {
   }
 
   late final _$isLoadingAtom =
-      Atom(name: '_AuthStoreBase.isLoading', context: context);
+      Atom(name: 'AuthStoreBase.isLoading', context: context);
 
   @override
   bool get isLoading {

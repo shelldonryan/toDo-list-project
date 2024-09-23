@@ -10,7 +10,7 @@ part of 'tasks_store.dart';
 
 mixin _$TaskStore on TaskStoreBase, Store {
   late final _$isLoadingAtom =
-      Atom(name: '_TaskStoreBase.isLoading', context: context);
+      Atom(name: 'TaskStoreBase.isLoading', context: context);
 
   @override
   bool get isLoading {
@@ -25,7 +25,7 @@ mixin _$TaskStore on TaskStoreBase, Store {
     });
   }
 
-  late final _$tasksAtom = Atom(name: '_TaskStoreBase.tasks', context: context);
+  late final _$tasksAtom = Atom(name: 'TaskStoreBase.tasks', context: context);
 
   @override
   ObservableList<Task> get tasks {
@@ -41,7 +41,7 @@ mixin _$TaskStore on TaskStoreBase, Store {
   }
 
   late final _$loadTasksAsyncAction =
-      AsyncAction('_TaskStoreBase.loadTasks', context: context);
+      AsyncAction('TaskStoreBase.loadTasks', context: context);
 
   @override
   Future<void> loadTasks() {
@@ -49,7 +49,7 @@ mixin _$TaskStore on TaskStoreBase, Store {
   }
 
   late final _$addTaskAsyncAction =
-      AsyncAction('_TaskStoreBase.addTask', context: context);
+      AsyncAction('TaskStoreBase.addTask', context: context);
 
   @override
   Future<void> addTask(String taskName, String description) {
@@ -57,7 +57,7 @@ mixin _$TaskStore on TaskStoreBase, Store {
   }
 
   late final _$deleteTaskAsyncAction =
-      AsyncAction('_TaskStoreBase.deleteTask', context: context);
+      AsyncAction('TaskStoreBase.deleteTask', context: context);
 
   @override
   Future<void> deleteTask(String id) {
@@ -65,7 +65,7 @@ mixin _$TaskStore on TaskStoreBase, Store {
   }
 
   late final _$updateTaskStatusAsyncAction =
-      AsyncAction('_TaskStoreBase.updateTaskStatus', context: context);
+      AsyncAction('TaskStoreBase.updateTaskStatus', context: context);
 
   @override
   Future<void> updateTaskStatus(String id, bool isDone) {
@@ -74,7 +74,7 @@ mixin _$TaskStore on TaskStoreBase, Store {
   }
 
   late final _$updateTaskAsyncAction =
-      AsyncAction('_TaskStoreBase.updateTask', context: context);
+      AsyncAction('TaskStoreBase.updateTask', context: context);
 
   @override
   Future<void> updateTask(String id, String taskName, String taskDescription) {

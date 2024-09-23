@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_project/features/task/pages/tasks_page.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/shared/themes/index.dart';
 
 class AuthPage extends StatefulWidget {
@@ -11,16 +12,30 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   final _formKey = GlobalKey<FormState>();
+  final email = TextEditingController();
+  final password = TextEditingController();
+  final username = TextEditingController();
   bool isSignupBottom = false;
 
+  late final AuthStore authStore;
+
   _authButtonStage() {
-    if (_formKey.currentState!.validate() && isSignupBottom) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const TaskPage()));
+    if (_formKey.currentState!.validate()) {
+      if (isSignupBottom) {
+        authStore.signin(email.text, password.text);
+      } else {
+        authStore.signup(username.text, password.text, email.text);
+      }
     } else if (!isSignupBottom) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("You don't have an account yet")));
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    authStore = Provider.of<AuthStore>(context);
   }
 
   @override
@@ -56,12 +71,17 @@ class _AuthPageState extends State<AuthPage> {
                     height: 24,
                   ),
                   TextFormField(
-                    decoration: getAuthInputDecoration("username"),
+                    controller: email,
+                    decoration: getAuthInputDecoration("e-mail"),
                     validator: (String? value) {
                       if (value!.isEmpty) {
-                        return 'This field is empty';
-                      } else if (value.length < 6) {
-                        return 'The username must be 6 letters';
+                        return "Empty Field";
+                      }
+                      if (value.length < 5) {
+                        return "This e-mail is very short";
+                      }
+                      if (!value.contains("@")) {
+                        return "This e-mail is invalid";
                       }
                       return null;
                     },
@@ -70,6 +90,7 @@ class _AuthPageState extends State<AuthPage> {
                     height: 8,
                   ),
                   TextFormField(
+                    controller: password,
                     obscureText: true,
                     decoration: getAuthInputDecoration("password"),
                     validator: (String? value) {
@@ -97,6 +118,8 @@ class _AuthPageState extends State<AuthPage> {
                               return 'This field is empty';
                             } else if (value.length < 8) {
                               return 'The password must have at least 8 characters';
+                            } else if (value != password.text) {
+                              return 'This password is not the same';
                             }
                             return null;
                           },
@@ -105,17 +128,13 @@ class _AuthPageState extends State<AuthPage> {
                           height: 8,
                         ),
                         TextFormField(
-                          obscureText: true,
-                          decoration: getAuthInputDecoration("e-mail"),
+                          controller: username,
+                          decoration: getAuthInputDecoration("username"),
                           validator: (String? value) {
                             if (value!.isEmpty) {
-                              return "Empty Field";
-                            }
-                            if (value.length < 5) {
-                              return "This e-mail is very short";
-                            }
-                            if (!value.contains("@")) {
-                              return "This e-mail is invalid";
+                              return 'This field is empty';
+                            } else if (value.length < 6) {
+                              return 'The username must be 6 letters';
                             }
                             return null;
                           },
