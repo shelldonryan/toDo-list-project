@@ -16,7 +16,12 @@ class _AuthCheckState extends State<AuthCheck> {
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthStore>(context);
-    return Observer(builder: (_) => authService.userIsAuth ? const TaskPage() : const AuthPage());
+    final authStore = Provider.of<AuthStore>(context);
+    return Observer(builder:(_) {
+      if (authStore.userIsAuth) {
+        return const TaskPage();
+      }
+      return const AuthPage();
+    });
   }
 }

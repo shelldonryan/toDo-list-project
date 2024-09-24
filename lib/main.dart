@@ -19,9 +19,8 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       Provider(create: (context) => TaskService(),),
-      Provider(create: (context) => UserService(),),
       Provider(create: (context) => TaskStore(Provider.of<TaskService>(context, listen: false))),
-      Provider(create: (context) => AuthStore(Provider.of<UserService>(context, listen: false))),
+      Provider(create: (context) => AuthStore()),
     ],
     child: const MyApp(),
   ));

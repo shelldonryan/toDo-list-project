@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobx/mobx.dart';
-import 'package:todo_list_project/core/services/user_service.dart';
-import 'package:todo_list_project/features/auth/models/user.dart';
 import 'package:uuid/uuid.dart';
 
 part 'auth_store.g.dart';
@@ -9,7 +7,6 @@ part 'auth_store.g.dart';
 class AuthStore = AuthStoreBase with _$AuthStore;
 
 abstract class AuthStoreBase with Store {
-  final UserService _userService;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final Uuid uuid = const Uuid();
 
@@ -22,7 +19,7 @@ abstract class AuthStoreBase with Store {
   @observable
   bool isLoading = false;
 
-  AuthStoreBase(this._userService) {
+  AuthStoreBase() {
     _firebaseUser = _firebaseAuth.currentUser;
 
     _firebaseAuth.authStateChanges().listen((User? user) {
@@ -36,30 +33,15 @@ abstract class AuthStoreBase with Store {
 
   User? get user => _firebaseUser;
 
-  Future<bool> signup(String username, String password, String email) async {
-    String id = uuid.v4();
-
+  Future<void> signup(String username, String password, String email) async {
     try {
       isLoading = true;
 
-      await _userService.addUser(Users(
-          id: id,
-          name: username,
-          password: password,
-          email: email,
-          type: 'support',
-          token: ''));
-
-      await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
 
       isLoading = false;
-
-      return true;
-
     } catch (e) {
       isLoading = false;
-      return false;
     }
   }
 

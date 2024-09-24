@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/features/task/models/task.dart';
 import '../../../shared/themes/index.dart';
@@ -229,6 +230,11 @@ class _TaskPageState extends State<TaskPage> {
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text("Task List"),
         elevation: 10,
+        actions: [
+          IconButton(onPressed: () {
+            Provider.of<AuthStore>(context, listen: false).logout();
+          }, icon: const Icon(Icons.logout))
+        ],
       ),
       body: Observer(builder: (_) {
         bool isLoading = taskStore.isLoading;
