@@ -57,6 +57,30 @@ mixin _$AuthStore on AuthStoreBase, Store {
     });
   }
 
+  late final _$signupAsyncAction =
+      AsyncAction('AuthStoreBase.signup', context: context);
+
+  @override
+  Future<void> signup(String password, String email) {
+    return _$signupAsyncAction.run(() => super.signup(password, email));
+  }
+
+  late final _$signinAsyncAction =
+      AsyncAction('AuthStoreBase.signin', context: context);
+
+  @override
+  Future<void> signin(String email, String password) {
+    return _$signinAsyncAction.run(() => super.signin(email, password));
+  }
+
+  late final _$logoutAsyncAction =
+      AsyncAction('AuthStoreBase.logout', context: context);
+
+  @override
+  Future<void> logout() {
+    return _$logoutAsyncAction.run(() => super.logout());
+  }
+
   @override
   String toString() {
     return '''

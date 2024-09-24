@@ -137,8 +137,7 @@ class _AuthPageState extends State<AuthPage> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   if (isSignupBottom) {
-                                    authStore.signup(username.text,
-                                        password.text, email.text);
+                                    authStore.signup(password.text, email.text);
                                   } else {
                                     authStore.signin(email.text, password.text);
                                   }
@@ -146,7 +145,7 @@ class _AuthPageState extends State<AuthPage> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                           content:
-                                              Text("Your state is invalid")));
+                                              Text("Some field is a incorrect filled")));
                                 }
                               },
                               child: isSignupBottom

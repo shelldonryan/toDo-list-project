@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:uuid/uuid.dart';
 
@@ -33,11 +34,13 @@ abstract class AuthStoreBase with Store {
 
   User? get user => _firebaseUser;
 
-  Future<void> signup(String username, String password, String email) async {
+  @action
+  Future<void> signup(String password, String email) async {
     try {
       isLoading = true;
 
-      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
 
       isLoading = false;
     } catch (e) {
@@ -45,11 +48,13 @@ abstract class AuthStoreBase with Store {
     }
   }
 
+  @action
   Future<void> signin(String email, String password) async {
     try {
       isLoading = true;
 
-      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
 
       isLoading = false;
     } catch (e) {
@@ -57,6 +62,7 @@ abstract class AuthStoreBase with Store {
     }
   }
 
+  @action
   Future<void> logout() async {
     try {
       isLoading = true;
