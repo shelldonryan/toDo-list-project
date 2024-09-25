@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "260268431903",
+    "project_id": "flutter-tasklist-project",
+    "storage_bucket": "flutter-tasklist-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260268431903:android:4e902f59949f3f8e6b532a",
+        "android_client_info": {
+          "package_name": "ryan.shelldon.todo_list_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPFNjn2-__h4F6eq2ll2RlM9bmtOQj7Jg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
