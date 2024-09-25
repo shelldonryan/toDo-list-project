@@ -14,5 +14,5 @@ I am going to create a simple task list application where users can add, view, a
   - The data will be lost if the app is uninstalled.
 
 ## Auth Screen
-- 
-
+- Sign-up or Sign-in? Switch the choose with a button click
+- The system identify if you is logged in the system
