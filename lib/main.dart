@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list_project/core/firebase/auth_check.dart';
 import 'package:todo_list_project/core/services/tasks_service.dart';
-import 'package:todo_list_project/core/services/user_service.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';

@@ -34,7 +34,7 @@ abstract class AuthStoreBase with Store {
   User? get user => _firebaseUser;
 
   @action
-  Future<void> signup(String password, String email) async {
+  Future<String?> signup(String password, String email) async {
     try {
       isLoading = true;
 
@@ -42,13 +42,15 @@ abstract class AuthStoreBase with Store {
           email: email, password: password);
 
       isLoading = false;
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       isLoading = false;
+      return e.message;
     }
+    return null;
   }
 
   @action
-  Future<void> signin(String email, String password) async {
+  Future<String?> signin(String email, String password) async {
     try {
       isLoading = true;
 
@@ -56,21 +58,25 @@ abstract class AuthStoreBase with Store {
           email: email, password: password);
 
       isLoading = false;
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       isLoading = false;
+      return e.message;
     }
+    return null;
   }
 
   @action
-  Future<void> logout() async {
+  Future<String?> logout() async {
     try {
       isLoading = true;
 
       await _firebaseAuth.signOut();
 
       isLoading = false;
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       isLoading = false;
+      return e.message;
     }
+    return null;
   }
 }

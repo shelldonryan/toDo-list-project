@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/features/task/models/task.dart';
+import 'package:todo_list_project/shared/widgets/show_snack_bar.dart';
 import '../../../shared/themes/index.dart';
 
 class TaskPage extends StatefulWidget {
@@ -180,31 +181,31 @@ class _TaskPageState extends State<TaskPage> {
             ),
             Expanded(
               child: ListView.builder(
-                  itemCount: tasks.length,
-                  itemBuilder: (context, index) {
-                    final task = tasks[index];
-                    return ListTile(
-                      title: Text(
-                        task.taskName,
-                        style: TextStyle(
-                            decoration: task.isDone
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                            color: !task.isDone ? Colors.black : Colors.grey),
-                      ),
-                      leading: Checkbox(
-                          value: task.isDone,
-                          onChanged: (bool? isDone) =>
-                              store.updateTaskStatus(task.id, isDone!)),
-                      onLongPress: () {
-                        _showEditTaskAlert(context, task, store);
-                      },
-                      onTap: () {
-                        _showTaskModal(context, task, store);
-                      },
-                    );
-                  },
-                ),
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  final task = tasks[index];
+                  return ListTile(
+                    title: Text(
+                      task.taskName,
+                      style: TextStyle(
+                          decoration: task.isDone
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none,
+                          color: !task.isDone ? Colors.black : Colors.grey),
+                    ),
+                    leading: Checkbox(
+                        value: task.isDone,
+                        onChanged: (bool? isDone) =>
+                            store.updateTaskStatus(task.id, isDone!)),
+                    onLongPress: () {
+                      _showEditTaskAlert(context, task, store);
+                    },
+                    onTap: () {
+                      _showTaskModal(context, task, store);
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -231,15 +232,25 @@ class _TaskPageState extends State<TaskPage> {
         title: const Text("Task List"),
         elevation: 10,
         actions: [
-          IconButton(onPressed: () {
-            Provider.of<AuthStore>(context, listen: false).logout();
-          }, icon: const Icon(Icons.logout))
+          IconButton(
+              onPressed: () {
+                Provider.of<AuthStore>(context, listen: false).logout().then(
+                  (String? erro) {
+                    if (erro != null) {
+                      showErrorSnackBar(context: context, error: erro);
+                    }
+                  },
+                );
+              },
+              icon: const Icon(Icons.logout))
         ],
       ),
       body: Observer(builder: (_) {
         bool isLoading = taskStore.isLoading;
-        List<Task> pendingTasks = taskStore.tasks.where((task) => !task.isDone).toList();
-        List<Task> doneTasks = taskStore.tasks.where((task) => task.isDone).toList();
+        List<Task> pendingTasks =
+            taskStore.tasks.where((task) => !task.isDone).toList();
+        List<Task> doneTasks =
+            taskStore.tasks.where((task) => task.isDone).toList();
 
         if (isLoading) {
           return const Center(child: LinearProgressIndicator());

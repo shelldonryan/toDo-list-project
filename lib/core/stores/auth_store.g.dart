@@ -61,7 +61,7 @@ mixin _$AuthStore on AuthStoreBase, Store {
       AsyncAction('AuthStoreBase.signup', context: context);
 
   @override
-  Future<void> signup(String password, String email) {
+  Future<String?> signup(String password, String email) {
     return _$signupAsyncAction.run(() => super.signup(password, email));
   }
 
@@ -69,7 +69,7 @@ mixin _$AuthStore on AuthStoreBase, Store {
       AsyncAction('AuthStoreBase.signin', context: context);
 
   @override
-  Future<void> signin(String email, String password) {
+  Future<String?> signin(String email, String password) {
     return _$signinAsyncAction.run(() => super.signin(email, password));
   }
 
@@ -77,7 +77,7 @@ mixin _$AuthStore on AuthStoreBase, Store {
       AsyncAction('AuthStoreBase.logout', context: context);
 
   @override
-  Future<void> logout() {
+  Future<String?> logout() {
     return _$logoutAsyncAction.run(() => super.logout());
   }
 

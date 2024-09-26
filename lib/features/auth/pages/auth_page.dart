@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/shared/themes/index.dart';
+import 'package:todo_list_project/shared/widgets/show_snack_bar.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -137,15 +138,33 @@ class _AuthPageState extends State<AuthPage> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   if (isSignupBottom) {
-                                    authStore.signup(password.text, email.text);
+                                    authStore
+                                        .signup(password.text, email.text)
+                                        .then(
+                                      (String? erro) {
+                                        if (erro != null) {
+                                          showErrorSnackBar(
+                                              context: context, error: erro);
+                                        }
+                                      },
+                                    );
                                   } else {
-                                    authStore.signin(email.text, password.text);
+                                    authStore
+                                        .signin(email.text, password.text)
+                                        .then(
+                                      (String? erro) {
+                                        if (erro != null) {
+                                          showErrorSnackBar(
+                                              context: context, error: erro);
+                                        }
+                                      },
+                                    );
+                                    ;
                                   }
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content:
-                                              Text("Some field is a incorrect filled")));
+                                  showErrorSnackBar(
+                                      context: context,
+                                      error: "Some filled is invalid");
                                 }
                               },
                               child: isSignupBottom
