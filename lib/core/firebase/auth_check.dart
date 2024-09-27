@@ -19,7 +19,7 @@ class _AuthCheckState extends State<AuthCheck> {
     final authStore = Provider.of<AuthStore>(context);
     return Observer(builder:(_) {
       if (authStore.userIsAuth) {
-        return const TaskPage();
+        return TaskPage();
       }
       return const AuthPage();
     });

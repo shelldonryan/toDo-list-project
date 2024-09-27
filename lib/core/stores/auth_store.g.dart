@@ -61,8 +61,8 @@ mixin _$AuthStore on AuthStoreBase, Store {
       AsyncAction('AuthStoreBase.signup', context: context);
 
   @override
-  Future<String?> signup(String password, String email) {
-    return _$signupAsyncAction.run(() => super.signup(password, email));
+  Future<String?> signup(String email, String password) {
+    return _$signupAsyncAction.run(() => super.signup(email, password));
   }
 
   late final _$signinAsyncAction =

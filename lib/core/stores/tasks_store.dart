@@ -22,6 +22,7 @@ abstract class TaskStoreBase with Store {
   @action
   Future<void> loadTasks() async {
     isLoading = true;
+
     final allTasks = await _taskService.getTasks();
     tasks.clear();
 
@@ -33,15 +34,17 @@ abstract class TaskStoreBase with Store {
   }
 
   @action
-  Future<void> addTask(String taskName, String description) async {
+  Future<void> addTask(
+      String taskName, String description, String userId) async {
     String id = uuid.v4();
-    await _taskService.addTask(id, taskName, description);
+    await _taskService.addTask(id, taskName, description, userId);
 
     tasks.add(Task(
         id: id,
         taskName: taskName,
         isDone: false,
-        description: description));
+        description: description,
+        userId: userId));
   }
 
   @action
@@ -68,16 +71,17 @@ abstract class TaskStoreBase with Store {
   }
 
   @action
-  Future<void> updateTask(String id, String taskName, String taskDescription) async {
+  Future<void> updateTask(
+      String id, String taskName, String taskDescription) async {
     await _taskService.updateTask(id, taskName, taskDescription);
-    
+
     isLoading = true;
 
     Task taskUpdate = tasks.firstWhere((task) => task.id == id);
 
     taskUpdate.taskName = taskName;
     taskUpdate.description = taskDescription;
-    
+
     isLoading = false;
   }
 }

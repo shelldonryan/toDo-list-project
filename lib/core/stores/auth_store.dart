@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobx/mobx.dart';
-import 'package:uuid/uuid.dart';
 
 part 'auth_store.g.dart';
 
@@ -8,7 +7,6 @@ class AuthStore = AuthStoreBase with _$AuthStore;
 
 abstract class AuthStoreBase with Store {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final Uuid uuid = const Uuid();
 
   @observable
   User? _firebaseUser;
@@ -20,13 +18,14 @@ abstract class AuthStoreBase with Store {
   bool isLoading = false;
 
   AuthStoreBase() {
-    _firebaseUser = _firebaseAuth.currentUser;
 
     _firebaseAuth.authStateChanges().listen((User? user) {
       if (user != null) {
         userIsAuth = true;
+        _firebaseUser = _firebaseAuth.currentUser;
       } else {
         userIsAuth = false;
+        _firebaseUser = null;
       }
     });
   }
@@ -34,7 +33,7 @@ abstract class AuthStoreBase with Store {
   User? get user => _firebaseUser;
 
   @action
-  Future<String?> signup(String password, String email) async {
+  Future<String?> signup(String email, String password) async {
     try {
       isLoading = true;
 

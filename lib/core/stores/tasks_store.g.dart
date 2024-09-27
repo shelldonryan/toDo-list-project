@@ -52,8 +52,9 @@ mixin _$TaskStore on TaskStoreBase, Store {
       AsyncAction('TaskStoreBase.addTask', context: context);
 
   @override
-  Future<void> addTask(String taskName, String description) {
-    return _$addTaskAsyncAction.run(() => super.addTask(taskName, description));
+  Future<void> addTask(String taskName, String description, String userId) {
+    return _$addTaskAsyncAction
+        .run(() => super.addTask(taskName, description, userId));
   }
 
   late final _$deleteTaskAsyncAction =

@@ -35,7 +35,7 @@ class UserService {
       "id": user.id,
       "name": user.name,
       "email": user.email,
-      "type": user.type,
+      "type": (user.type != "") ? "support" : "developer",
       "password": user.password,
       "token": user.token,
     });

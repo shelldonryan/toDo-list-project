@@ -8,25 +8,31 @@ class TaskService {
 
   Future<Database> get database async {
     return await dbService.database;
-}
+  }
 
   Future<List<Task>> getTasks() async {
     final db = await database;
 
-    final data = await db.query(_tasksTableName);
+    final data = await db.query(
+      _tasksTableName,
+    );
 
     List<Task> tasks = data
-        .map((taskObj) => Task(
-            id: taskObj["id"] as String,
-            taskName: taskObj["taskName"] as String,
-            description: taskObj["description"] as String,
-            isDone: taskObj["isDone"] == 1 ? true : false))
+        .map(
+          (taskObj) => Task(
+              id: taskObj["id"] as String,
+              taskName: taskObj["taskName"] as String,
+              description: taskObj["description"] as String,
+              isDone: taskObj["isDone"] == 1 ? true : false,
+              userId: taskObj["userId"] as String),
+        )
         .toList();
 
     return tasks;
   }
 
-  Future<bool> addTask(String id, String taskName, String description) async {
+  Future<bool> addTask(
+      String id, String taskName, String description, String userId) async {
     final db = await database;
 
     await db.insert(_tasksTableName, {
@@ -34,8 +40,9 @@ class TaskService {
       "taskName": taskName,
       "description": description,
       "isDone": 0,
+      "userId": userId,
     });
-    
+
     return true;
   }
 
@@ -56,7 +63,8 @@ class TaskService {
     return true;
   }
 
-  Future<bool> updateTask(String id, String taskName, String description) async {
+  Future<bool> updateTask(
+      String id, String taskName, String description) async {
     final db = await database;
 
     await db.update(

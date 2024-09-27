@@ -18,6 +18,7 @@ class _TaskPageState extends State<TaskPage> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   late final TaskStore taskStore;
+  late final AuthStore authStore;
 
   _showEditTaskAlert(BuildContext context, Task task, TaskStore store) {
     showDialog(
@@ -77,7 +78,7 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  _showTaskAlert(BuildContext context, TaskStore store) {
+  _showTaskAlert(BuildContext context, TaskStore taskStore, String uid) {
     showDialog(
         context: context,
         builder: (context) {
@@ -105,8 +106,8 @@ class _TaskPageState extends State<TaskPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (titleController.text.isNotEmpty) {
-                        store.addTask(
-                            titleController.text, descriptionController.text);
+                        taskStore.addTask(titleController.text,
+                            descriptionController.text, uid);
                         titleController.clear();
                         descriptionController.clear();
                         Navigator.pop(context);
@@ -214,15 +215,11 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    taskStore = Provider.of<TaskStore>(context, listen: false);
-    taskStore.loadTasks();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final taskStore = Provider.of<TaskStore>(context);
+    taskStore = Provider.of<TaskStore>(context);
+    authStore = Provider.of<AuthStore>(context);
+
+    taskStore.loadTasks();
 
     return Scaffold(
       appBar: AppBar(
@@ -234,7 +231,7 @@ class _TaskPageState extends State<TaskPage> {
         actions: [
           IconButton(
               onPressed: () {
-                Provider.of<AuthStore>(context, listen: false).logout().then(
+                authStore.logout().then(
                   (String? erro) {
                     if (erro != null) {
                       showErrorSnackBar(context: context, error: erro);
@@ -246,15 +243,18 @@ class _TaskPageState extends State<TaskPage> {
         ],
       ),
       body: Observer(builder: (_) {
-        bool isLoading = taskStore.isLoading;
-        List<Task> pendingTasks =
-            taskStore.tasks.where((task) => !task.isDone).toList();
-        List<Task> doneTasks =
-            taskStore.tasks.where((task) => task.isDone).toList();
+        String? uid = authStore.user!.uid;
 
-        if (isLoading) {
+        if (taskStore.isLoading && uid.isEmpty) {
           return const Center(child: LinearProgressIndicator());
         }
+
+        List<Task> pendingTasks = taskStore.tasks
+            .where((task) => !task.isDone && task.userId == uid)
+            .toList();
+        List<Task> doneTasks = taskStore.tasks
+            .where((task) => task.isDone && task.userId == uid)
+            .toList();
 
         return Container(
           padding:
@@ -273,7 +273,7 @@ class _TaskPageState extends State<TaskPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          _showTaskAlert(context, taskStore);
+          _showTaskAlert(context, taskStore, authStore.user!.uid);
         },
         backgroundColor: MyColors.greenSofTec,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,

@@ -45,8 +45,5 @@ final String _usersTableName = "users";
         FOREIGN KEY(userId) REFERENCES users(id)
       )
     ''');
-    await db.insert('''
-      INSERT INTO $_usersTableName (id, name, password, type) VALUES ('shelduuidespecial', 'shelldonryan', 'shelldon1234', 'developer')
-    ''');
   }
 }
