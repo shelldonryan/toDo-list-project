@@ -83,6 +83,9 @@ class _TaskPageState extends State<TaskPage> {
     showDialog(
         context: context,
         builder: (context) {
+          titleController.clear();
+          descriptionController.clear();
+
           return AlertDialog(
             title: const Text('Add new task'),
             content: SingleChildScrollView(
@@ -140,9 +143,9 @@ class _TaskPageState extends State<TaskPage> {
                   const SizedBox(height: 20),
                   Text(task.description),
                   Visibility(
-                    visible: task.description.isEmpty,
+                    visible: task.description.isNotEmpty,
                     child: const SizedBox(
-                      height: 40,
+                      height: 30,
                     ),
                   ),
                   Row(
