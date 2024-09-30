@@ -5,7 +5,8 @@ import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/features/task/models/task.dart';
 import 'package:todo_list_project/shared/widgets/show_snack_bar.dart';
-import '../../../shared/themes/index.dart';
+
+import '../../../shared/themes/my_colors.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
@@ -15,8 +16,8 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
-  final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
+  late final TextEditingController titleController;
+  late final TextEditingController descriptionController;
   late final TaskStore taskStore;
   late final AuthStore authStore;
 
@@ -215,10 +216,21 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    titleController = TextEditingController();
+    descriptionController = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     taskStore = Provider.of<TaskStore>(context);
     authStore = Provider.of<AuthStore>(context);
+  }
 
+  @override
+  Widget build(BuildContext context) {
     taskStore.loadTasks();
 
     return Scaffold(
@@ -227,7 +239,6 @@ class _TaskPageState extends State<TaskPage> {
         backgroundColor: MyColors.greenSofTec,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text("Task List"),
-        elevation: 10,
         actions: [
           IconButton(
               onPressed: () {

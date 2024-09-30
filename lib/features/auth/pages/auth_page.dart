@@ -3,8 +3,10 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
-import 'package:todo_list_project/shared/themes/index.dart';
 import 'package:todo_list_project/shared/widgets/show_snack_bar.dart';
+
+import '../../../shared/themes/decoration_field_auth.dart';
+import '../../../shared/themes/my_colors.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});

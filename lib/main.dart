@@ -7,7 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
 import 'firebase_options.dart';
-import 'package:todo_list_project/shared/themes/index.dart';
+import 'package:todo_list_project/shared/themes/my_colors.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
