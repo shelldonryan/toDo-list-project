@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:todo_list_project/features/auth/models/user.dart';
 import '../database/db.dart';
@@ -26,6 +27,29 @@ class UserService {
         .toList();
 
     return users;
+  }
+
+  Future<Users?> getUser(String uid) async {
+    final db = await database;
+
+    try {
+      final data = await db.query(_usersTableName, where: "id = ?", whereArgs: [uid,]);
+
+      if(data.isNotEmpty) {
+        final user = data.first;
+        return Users(
+            id: user["id"] as String,
+            name: user["name"] as String,
+            email: user["email"] as String,
+            password: "*******",
+            type: user["type"] as String,
+            token: user["token"] as String);
+      }
+      return null;
+    } catch (e) {
+      print("error to get user: $uid");
+      return null;
+    }
   }
 
   Future<bool> addUser(Users user) async{

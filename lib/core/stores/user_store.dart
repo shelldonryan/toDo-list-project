@@ -9,6 +9,9 @@ class UserStore = UserStoreBase with _$UserStore;
 abstract class UserStoreBase with Store {
   UserService? _userService;
 
+  @observable
+  late Users user;
+
   UserStoreBase(UserService userService) {
     _userService = userService;
   }
@@ -16,9 +19,11 @@ abstract class UserStoreBase with Store {
   @action
   Future<void> createUser(String uid, String name, String email, String password) async {
     Users user = Users(id: uid, name: name, email: email, password: password, type: '', token: '');
-
-    print(user);
-
     await _userService!.addUser(user);
+  }
+
+  @action
+  Future<void> getUser(String uid) async {
+    Users? user = await _userService!.getUser(uid);
   }
 }
