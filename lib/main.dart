@@ -13,17 +13,23 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    print("Error to initialize: $e");
+  }
+
+
 
   runApp(MultiProvider(
     providers: [
       Provider(create: (context) => TaskService(),),
       Provider(create: (context) => UserService(),),
-      Provider(create: (context) => TaskStore(Provider.of<TaskService>(context, listen: false))),
       Provider(create: (context) => AuthStore()),
-      Provider(create: (context) => UserStore(Provider.of<UserService>(context, listen: false))),
+      Provider(create: (context) => TaskStore(Provider.of<TaskService>(context))),
+      Provider(create: (context) => UserStore(Provider.of<UserService>(context))),
     ],
     child: const MyApp(),
   ));

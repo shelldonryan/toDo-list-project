@@ -31,9 +31,14 @@ abstract class AuthStoreBase with Store {
   }
 
   User? get user => _firebaseUser;
+  String? get userId => _firebaseUser?.uid;
 
   @action
   Future<String?> signup(String email, String password) async {
+    if (email.isEmpty || password.isEmpty) {
+      return 'Invalid Parameters';
+    }
+
     try {
       isLoading = true;
 
@@ -50,6 +55,10 @@ abstract class AuthStoreBase with Store {
 
   @action
   Future<String?> signin(String email, String password) async {
+    if (email.isEmpty || password.isEmpty) {
+      return 'Parâmetros de entrada inválidos';
+    }
+
     try {
       isLoading = true;
 

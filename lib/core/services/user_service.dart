@@ -33,9 +33,13 @@ class UserService {
     final db = await database;
 
     try {
-      final data = await db.query(_usersTableName, where: "id = ?", whereArgs: [uid,]);
+      final data = await db.query(_usersTableName, where: "id = ?", whereArgs: [
+        uid,
+      ]);
 
-      if(data.isNotEmpty) {
+      print(data);
+
+      if (data.isNotEmpty) {
         final user = data.first;
         return Users(
             id: user["id"] as String,
@@ -47,19 +51,19 @@ class UserService {
       }
       return null;
     } catch (e) {
-      print("error to get user: $uid");
+      throw Exception("error to get user: $uid");
       return null;
     }
   }
 
-  Future<bool> addUser(Users user) async{
+  Future<bool> addUser(Users user) async {
     final db = await database;
 
     await db.insert(_usersTableName, {
       "id": user.id,
       "name": user.name,
       "email": user.email,
-      "type": (user.type != "") ? "support" : "developer",
+      "type": (user.type == "") ? "support" : "developer",
       "password": user.password,
       "token": user.token,
     });
