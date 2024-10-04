@@ -29,7 +29,7 @@ class UserService {
     return users;
   }
 
-  Future<Users?> getUser(String uid) async {
+  Future<Users> getUser(String uid) async {
     final db = await database;
 
     try {
@@ -39,20 +39,17 @@ class UserService {
 
       print(data);
 
-      if (data.isNotEmpty) {
-        final user = data.first;
-        return Users(
-            id: user["id"] as String,
-            name: user["name"] as String,
-            email: user["email"] as String,
-            password: "*******",
-            type: user["type"] as String,
-            token: user["token"] as String);
-      }
-      return null;
+      final user = data.first;
+      return Users(
+          id: user["id"] as String,
+          name: user["name"] as String,
+          email: user["email"] as String,
+          password: "*******",
+          type: user["type"] as String,
+          token: user["token"] as String);
+
     } catch (e) {
       throw Exception("error to get user: $uid");
-      return null;
     }
   }
 

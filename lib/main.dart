@@ -21,15 +21,13 @@ void main() async {
     print("Error to initialize: $e");
   }
 
-
-
   runApp(MultiProvider(
     providers: [
       Provider(create: (context) => TaskService(),),
       Provider(create: (context) => UserService(),),
       Provider(create: (context) => AuthStore()),
-      Provider(create: (context) => TaskStore(Provider.of<TaskService>(context))),
-      Provider(create: (context) => UserStore(Provider.of<UserService>(context))),
+      Provider(create: (context) => TaskStore(Provider.of<TaskService>(context, listen: false))),
+      Provider(create: (context) => UserStore(Provider.of<UserService>(context, listen: false))),
     ],
     child: const MyApp(),
   ));

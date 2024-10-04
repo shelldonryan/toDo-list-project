@@ -25,6 +25,7 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     final authStore = Provider.of<AuthStore>(context);
+    final userStore = Provider.of<UserStore>(context);
 
     return Scaffold(
       body: Container(
@@ -143,15 +144,17 @@ class _AuthPageState extends State<AuthPage> {
                                   if (isSignupBottom) {
                                     authStore
                                         .signup(email.text, password.text)
-                                        .then(
-                                      (String? erro) {
-                                        if (erro != null) {
-                                          showErrorSnackBar(
-                                              context: context, error: erro);
-                                        }
+                                        .then((String? erro) async {
+                                      await userStore.createUser(
+                                          authStore.userId!,
+                                          username.text,
+                                          email.text,
+                                          password.text);
+                                      if (erro != null) {
+                                        showErrorSnackBar(
+                                            context: context, error: erro);
                                       }
-                                    );
-                                      Provider.of<UserStore>(context).createUser(authStore.user!.uid, username.text,email.text, password.text);
+                                    });
                                   } else {
                                     authStore
                                         .signin(email.text, password.text)
@@ -163,7 +166,6 @@ class _AuthPageState extends State<AuthPage> {
                                         }
                                       },
                                     );
-                                    ;
                                   }
                                 } else {
                                   showErrorSnackBar(

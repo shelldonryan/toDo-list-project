@@ -242,19 +242,6 @@ class _TaskPageState extends State<TaskPage> {
         backgroundColor: MyColors.greenSofTec,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text("Task List"),
-        actions: [
-          IconButton(
-              onPressed: () {
-                authStore.logout().then(
-                  (String? erro) {
-                    if (erro != null) {
-                      showErrorSnackBar(context: context, error: erro);
-                    }
-                  },
-                );
-              },
-              icon: const Icon(Icons.logout))
-        ],
       ),
       body: Observer(builder: (_) {
         String? uid = authStore.user!.uid;

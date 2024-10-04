@@ -18,11 +18,10 @@ abstract class AuthStoreBase with Store {
   bool isLoading = false;
 
   AuthStoreBase() {
-
     _firebaseAuth.authStateChanges().listen((User? user) {
       if (user != null) {
-        userIsAuth = true;
         _firebaseUser = _firebaseAuth.currentUser;
+        userIsAuth = true;
       } else {
         userIsAuth = false;
         _firebaseUser = null;
@@ -56,7 +55,7 @@ abstract class AuthStoreBase with Store {
   @action
   Future<String?> signin(String email, String password) async {
     if (email.isEmpty || password.isEmpty) {
-      return 'Parâmetros de entrada inválidos';
+      return 'Invalid Parameters';
     }
 
     try {
