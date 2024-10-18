@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';
+import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
+import 'package:todo_list_project/features/auth/widgets/user_list.dart';
 import '../../../shared/themes/my_colors.dart';
 import '../../../shared/widgets/show_snack_bar.dart';
-import '../repositories/profile_repository.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,14 +16,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late final AuthStore authStore;
-  late final UserStore userStore;
+  late AuthStore authStore;
+  late UserStore userStore;
+  late TaskStore taskStore;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     userStore = Provider.of<UserStore>(context);
     authStore = Provider.of<AuthStore>(context);
+    taskStore = Provider.of<TaskStore>(context);
   }
 
   @override
@@ -33,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    userStore.getUser(authStore.userId!);
+    userStore.getUserAccount(authStore.userId!);
 
     return Scaffold(
       appBar: AppBar(
@@ -43,64 +46,97 @@ class _ProfilePageState extends State<ProfilePage> {
         title: const Text("Profile"),
       ),
       body: Observer(
-        builder:(_) => ListView(
+        builder: (_) => ListView(
           padding: const EdgeInsets.all(20),
           children: [
             Column(
-                children: [
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(
-                        "https://images.unsplash.com/photo-1727638786395-6df4fc4a2048?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw4fHx8ZW58MHx8fHx8"),
+              children: [
+                // const CircleAvatar(
+                //   radius: 50,
+                //   backgroundImage: NetworkImage(
+                //       "https://images.unsplash.com/photo-1727638786395-6df4fc4a2048?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw4fHx8ZW58MHx8fHx8"),
+                // ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  userStore.username,
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
                   ),
-                  const SizedBox(
-                    height: 10,
+                ),
+                Text(
+                  userStore.userType,
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w200,
+                    fontSize: 14,
                   ),
-                  Text(
-                    userStore.username,
-                    style: const TextStyle(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Text(userStore.userType,
-                      style: const TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w200,
-                        fontSize: 14,
-                      )),
-                ],
-              ),
+                ),
+              ],
+            ),
             const SizedBox(
               height: 50,
             ),
-            ...List.generate(customListTiles.length, (index) {
-              final tile = customListTiles[index];
-              return Container(
-                padding: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
-                alignment: Alignment.bottomCenter,
-                child: ListTile(
-                  leading: Icon(tile.icon),
-                  title: Text(
-                    tile.title,
-                    style: const TextStyle(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                    ),
-                  ),
-                  trailing: Text(
-                    tile.quantity.toString(),
-                    style: const TextStyle(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                    ),
-                  ),
+            ListTile(
+              leading: const Icon(Icons.pending_outlined),
+              title: const Text(
+                "Pending Tasks",
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
                 ),
-              );
-            }),
+              ),
+              trailing: Text(
+                taskStore.pendingTasks.length.toString(),
+                style: const TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.task_alt),
+              title: const Text(
+                "Finished Tasks",
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                ),
+              ),
+              trailing: Text(
+                taskStore.finishedTasks.length.toString(),
+                style: const TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.all_inbox_sharp),
+              title: const Text(
+                "Total Tasks",
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                ),
+              ),
+              trailing: Text(
+                taskStore.tasks.length.toString(),
+                style: const TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                ),
+              ),
+            ),
             const SizedBox(
               height: 50,
             ),
@@ -111,19 +147,39 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   Visibility(
                       visible: userStore.userType == 'developer',
-                      child: const Column(
-                        children: [
-                          Card(
-                            elevation: 4,
-                            shadowColor: Colors.black12,
-                            child: ListTile(
-                              textColor: Colors.black54,
-                              leading: Icon(Icons.transform),
-                              title: Text("Make user Developer"),
-                              trailing: Icon(Icons.chevron_right),
-                            ),
-                          ),
-                        ],
+                      child: Card(
+                        elevation: 4,
+                        shadowColor: Colors.black12,
+                        child: ListTile(
+                          textColor: Colors.black54,
+                          leading: const Icon(Icons.transform),
+                          title: const Text("Make user Developer"),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () {
+                            userList(
+                                context: context,
+                                users: userStore.supportUsers,
+                                futureType: "developer");
+                          },
+                        ),
+                      )),
+                  Visibility(
+                      visible: userStore.userType == 'developer',
+                      child: Card(
+                        elevation: 4,
+                        shadowColor: Colors.black12,
+                        child: ListTile(
+                          textColor: Colors.black54,
+                          leading: const Icon(Icons.transform),
+                          title: const Text("Make user support"),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () {
+                            userList(
+                                context: context,
+                                users: userStore.developerUsers,
+                                futureType: "support");
+                          },
+                        ),
                       )),
                   Card(
                     elevation: 4,
@@ -141,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       onTap: () {
                         authStore.logout().then(
-                              (String? erro) {
+                          (String? erro) {
                             if (erro != null) {
                               showErrorSnackBar(context: context, error: erro);
                             }

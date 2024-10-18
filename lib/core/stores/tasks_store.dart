@@ -19,6 +19,16 @@ abstract class TaskStoreBase with Store {
   @observable
   ObservableList<Task> tasks = ObservableList<Task>();
 
+  @computed
+  ObservableList<Task> get pendingTasks {
+    return ObservableList<Task>.of(tasks.where((task) => task.isDone == false));
+  }
+
+  @computed
+  ObservableList<Task> get finishedTasks {
+    return ObservableList<Task>.of(tasks.where((task) => task.isDone == true));
+  }
+
   @action
   Future<void> loadTasks() async {
     isLoading = true;

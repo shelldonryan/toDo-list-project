@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:todo_list_project/features/auth/models/user.dart';
 import '../database/db.dart';
@@ -37,8 +36,6 @@ class UserService {
         uid,
       ]);
 
-      print(data);
-
       final user = data.first;
       return Users(
           id: user["id"] as String,
@@ -47,24 +44,38 @@ class UserService {
           password: "*******",
           type: user["type"] as String,
           token: user["token"] as String);
-
     } catch (e) {
       throw Exception("error to get user: $uid");
     }
   }
 
-  Future<bool> addUser(Users user) async {
+  Future<void> updateUser(Users user) async {
+    final db = await database;
+
+    await db.update(_usersTableName, {
+      "name": user.name,
+      "email": user.email ,
+      "password": user.password ,
+      "token": user.token ,
+      "type": user.type ,
+    }, where: "id = ?", whereArgs: [user.id]);
+  }
+
+  Future<void> addUser(Users user) async {
     final db = await database;
 
     await db.insert(_usersTableName, {
       "id": user.id,
       "name": user.name,
       "email": user.email,
-      "type": (user.type == "") ? "support" : "developer",
+      "type": user.type,
       "password": user.password,
       "token": user.token,
     });
+  }
 
-    return true;
+  Future<void> deleteUser(String uid) async {
+    final db = await database;
+    await db.delete(_usersTableName, where: "id = ?", whereArgs: [uid]);
   }
 }

@@ -10,3 +10,14 @@ showErrorSnackBar({required BuildContext context, required String error}) {
 
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
+
+showSnackBar({required BuildContext context, required String message}) {
+  SnackBar snackBar = SnackBar(
+    content: Text(message),
+    showCloseIcon: true,
+    backgroundColor: Colors.black54,
+    closeIconColor: Colors.white,
+  );
+
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}

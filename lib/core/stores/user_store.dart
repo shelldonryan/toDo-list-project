@@ -19,17 +19,54 @@ abstract class UserStoreBase with Store {
   @observable
   String _currentUid = "";
 
+  @observable
+  List<Users> userList = [];
+
+  @computed
+  List<Users> get supportUsers {
+    return List<Users>.of(userList.where((user) => user.type == "support"));
+  }
+
+  @computed
+  List<Users> get developerUsers {
+    return List<Users>.of(userList.where((user) => user.type == "developer" && user.id != _currentUid));
+  }
+
 
   UserStoreBase(UserService userService) {
     _userService = userService;
   }
 
+  @action
   Future<void> createUser(String uid, String name, String email, String password) async {
     if (uid.isEmpty || name.isEmpty || email.isEmpty || password.isEmpty) {
       throw Exception('Invalid Parameters');
     }
-    Users user = Users(id: uid, name: name, email: email, password: password, type: "", token: "");
+
+    Users user = Users(id: uid, name: name, email: email, password: password, type: "support", token: "");
     await _userService.addUser(user);
+    userList.add(user);
+  }
+
+  @action
+  Future<void> updateType(String uid, String type) async {
+    if (uid.isEmpty) {
+      throw Exception('Invalid Parameters');
+    }
+
+    int index = userList.indexWhere((user) => user.id == uid);
+    if (index == -1) {
+      throw Exception('User not found');
+    }
+
+    Users userToUpdate = userList[index];
+    userToUpdate.type = type;
+
+    try {
+      await _userService.updateUser (userToUpdate);
+    } catch (e) {
+      throw Exception('Failed to update user: $e');
+    }
   }
 
   @action
@@ -40,8 +77,9 @@ abstract class UserStoreBase with Store {
   }
 
   @action
-  Future<void> getUser(String uid) async {
+  Future<void> getUserAccount(String uid) async {
     user = await _userService.getUser(uid);
+    userList = await _userService.getUsers();
 
     _currentUid = uid;
     username = user.name;
