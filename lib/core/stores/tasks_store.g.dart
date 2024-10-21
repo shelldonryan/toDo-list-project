@@ -59,8 +59,8 @@ mixin _$TaskStore on TaskStoreBase, Store {
       AsyncAction('TaskStoreBase.loadTasks', context: context);
 
   @override
-  Future<void> loadTasks() {
-    return _$loadTasksAsyncAction.run(() => super.loadTasks());
+  Future<void> loadTasks(String uid, String filter) {
+    return _$loadTasksAsyncAction.run(() => super.loadTasks(uid, filter));
   }
 
   late final _$addTaskAsyncAction =

@@ -21,6 +21,7 @@ class TaskService {
         .map(
           (taskObj) => Task(
               id: taskObj["id"] as String,
+              createdAt: DateTime.fromMillisecondsSinceEpoch(taskObj['createdAt'] as int),
               taskName: taskObj["taskName"] as String,
               description: taskObj["description"] as String,
               isDone: taskObj["isDone"] == 1 ? true : false,
@@ -32,11 +33,12 @@ class TaskService {
   }
 
   Future<bool> addTask(
-      String id, String taskName, String description, String userId) async {
+      String id, String taskName, DateTime time, String description, String userId) async {
     final db = await database;
 
     await db.insert(_tasksTableName, {
       "id": id,
+      "createdAt": time.millisecondsSinceEpoch,
       "taskName": taskName,
       "description": description,
       "isDone": 0,

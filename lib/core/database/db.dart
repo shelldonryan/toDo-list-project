@@ -39,6 +39,7 @@ final String _usersTableName = "users";
       CREATE TABLE $_tasksTableName (
         id TEXT PRIMARY KEY,
         taskName TEXT NOT NULL,
+        createdAt INTEGER NOT NULL,
         description TEXT NOT NULL,
         isDone INTEGER NOT NULL,
         userId TEXT NOT NULL,

@@ -234,7 +234,7 @@ class _TaskPageState extends State<TaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    taskStore.loadTasks();
+    taskStore.loadTasks(authStore.userId!, "all");
 
     return Scaffold(
       appBar: AppBar(
@@ -242,6 +242,63 @@ class _TaskPageState extends State<TaskPage> {
         backgroundColor: MyColors.greenSofTec,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text("Task List"),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: const EdgeInsets.only(),
+          children: <Widget>[
+            const DrawerHeader(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Filters',
+                      style: TextStyle(color: Colors.black54, fontSize: 24)),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.today),
+              title: const Text('Today'),
+              onTap: () {
+                taskStore.loadTasks(authStore.userId!, "today");
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.calendar_today),
+              title: const Text('Tomorrow'),
+              onTap: () {
+                // Ação para filtrar tarefas de amanhã
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.calendar_view_week),
+              title: const Text('Week'),
+              onTap: () {
+                taskStore.loadTasks(authStore.userId!, "week");
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.calendar_month),
+              title: const Text('Month'),
+              onTap: () {
+                taskStore.loadTasks(authStore.userId!, "month");
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.list),
+              title: const Text('All'),
+              onTap: () {
+                taskStore.loadTasks(authStore.userId!, "all");
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
       body: Observer(builder: (_) {
         String? uid = authStore.user!.uid;
