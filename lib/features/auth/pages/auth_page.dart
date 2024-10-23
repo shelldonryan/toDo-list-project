@@ -46,7 +46,7 @@ class _AuthPageState extends State<AuthPage> {
                           Image.asset(
                             'assets/clipboard.png',
                             height: 128,
-                            color: MyColors.greenSofTec,
+                            color: MyColors.greenForest,
                           ),
                           const SizedBox(
                             height: 5,
@@ -57,7 +57,7 @@ class _AuthPageState extends State<AuthPage> {
                             style: TextStyle(
                                 fontSize: 38,
                                 fontWeight: FontWeight.bold,
-                                color: MyColors.greenSofTec),
+                                color: MyColors.greenForest),
                           ),
                           const SizedBox(
                             height: 24,

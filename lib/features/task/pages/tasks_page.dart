@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/features/task/models/task.dart';
-import 'package:todo_list_project/shared/widgets/show_snack_bar.dart';
+import 'package:todo_list_project/main.dart';
 
 import '../../../shared/themes/my_colors.dart';
 
@@ -21,7 +21,7 @@ class _TaskPageState extends State<TaskPage> {
   late final TaskStore taskStore;
   late final AuthStore authStore;
 
-  _showEditTaskAlert(BuildContext context, Task task, TaskStore store) {
+  _showEditTaskAlert(BuildContext context, Task task) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -64,7 +64,7 @@ class _TaskPageState extends State<TaskPage> {
                 ),
                 ElevatedButton(
                     onPressed: () {
-                      store.updateTask(task.id, titleController.text,
+                      taskStore.updateTask(task.id, titleController.text,
                           descriptionController.text);
                       titleController.clear();
                       descriptionController.clear();
@@ -79,54 +79,79 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  _showTaskAlert(BuildContext context, TaskStore taskStore, String uid) {
+  _showTaskAlert(BuildContext context, String uid) {
     showDialog(
         context: context,
         builder: (context) {
           titleController.clear();
           descriptionController.clear();
 
-          return AlertDialog(
-            title: const Text('Add new task'),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: titleController,
-                    decoration: const InputDecoration(
-                        labelText: "what's the task name?"),
-                  ),
-                  TextField(
-                    controller: descriptionController,
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                        labelText: "what's the description?"),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (titleController.text.isNotEmpty) {
-                        taskStore.addTask(titleController.text,
-                            descriptionController.text, uid);
-                        titleController.clear();
-                        descriptionController.clear();
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: const Icon(Icons.check),
-                  ),
-                ],
+          return Observer(builder: (_) {
+            return AlertDialog(
+              title: const Text('Add new task'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextField(
+                      controller: titleController,
+                      decoration: const InputDecoration(
+                          labelText: "what's the task name?", labelStyle: TextStyle(color: Colors.black54),),
+                    ),
+                    TextField(
+                      controller: descriptionController,
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      decoration: const InputDecoration(
+                          labelText: "what's the description?", labelStyle: TextStyle(color: Colors.black54),),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Schedule for tomorrow",
+                          style: TextStyle(
+                              decoration: TextDecoration.none,
+                              color: !taskStore.isTomorrow ? Colors.black54 : MyColors.greenForest),
+                        ),
+                        Switch(
+                          value: taskStore.isTomorrow,
+                          onChanged: (bool? value) =>
+                              taskStore.updateIsTomorrowStatus(value),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (titleController.text.isNotEmpty) {
+                          taskStore.addTask(
+                              titleController.text,
+                              descriptionController.text,
+                              uid,
+                              taskStore.isTomorrow);
+                          titleController.clear();
+                          descriptionController.clear();
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: const Icon(Icons.check),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
+            );
+          });
         });
   }
 
-  _showTaskModal(BuildContext context, Task task, TaskStore store) {
+  _showTaskModal(BuildContext context, Task task) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) => Container(
@@ -153,7 +178,7 @@ class _TaskPageState extends State<TaskPage> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          store.deleteTask(task.id);
+                          taskStore.deleteTask(task.id);
                           Navigator.pop(context);
                         },
                         child: const Icon(Icons.delete),
@@ -203,10 +228,10 @@ class _TaskPageState extends State<TaskPage> {
                         onChanged: (bool? isDone) =>
                             store.updateTaskStatus(task.id, isDone!)),
                     onLongPress: () {
-                      _showEditTaskAlert(context, task, store);
+                      _showEditTaskAlert(context, task);
                     },
                     onTap: () {
-                      _showTaskModal(context, task, store);
+                      _showTaskModal(context, task);
                     },
                   );
                 },
@@ -234,12 +259,12 @@ class _TaskPageState extends State<TaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    taskStore.loadTasks(authStore.userId!, "all");
+    taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: MyColors.greenSofTec,
+        backgroundColor: MyColors.greenForest,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text("Task List"),
       ),
@@ -248,12 +273,13 @@ class _TaskPageState extends State<TaskPage> {
           padding: const EdgeInsets.only(),
           children: <Widget>[
             const DrawerHeader(
+              decoration: BoxDecoration(color: MyColors.greenForest),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Filters',
-                      style: TextStyle(color: Colors.black54, fontSize: 24)),
+                      style: TextStyle(color: Colors.white, fontSize: 24)),
                 ],
               ),
             ),
@@ -261,7 +287,8 @@ class _TaskPageState extends State<TaskPage> {
               leading: const Icon(Icons.today),
               title: const Text('Today'),
               onTap: () {
-                taskStore.loadTasks(authStore.userId!, "today");
+                taskStore.currentFilter = "today";
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
                 Navigator.pop(context);
               },
             ),
@@ -269,7 +296,8 @@ class _TaskPageState extends State<TaskPage> {
               leading: const Icon(Icons.calendar_today),
               title: const Text('Tomorrow'),
               onTap: () {
-                // Ação para filtrar tarefas de amanhã
+                taskStore.currentFilter = "tomorrow";
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
                 Navigator.pop(context);
               },
             ),
@@ -277,7 +305,8 @@ class _TaskPageState extends State<TaskPage> {
               leading: const Icon(Icons.calendar_view_week),
               title: const Text('Week'),
               onTap: () {
-                taskStore.loadTasks(authStore.userId!, "week");
+                taskStore.currentFilter = "week";
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
                 Navigator.pop(context);
               },
             ),
@@ -285,7 +314,8 @@ class _TaskPageState extends State<TaskPage> {
               leading: const Icon(Icons.calendar_month),
               title: const Text('Month'),
               onTap: () {
-                taskStore.loadTasks(authStore.userId!, "month");
+                taskStore.currentFilter = "month";
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
                 Navigator.pop(context);
               },
             ),
@@ -294,6 +324,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('All'),
               onTap: () {
                 taskStore.loadTasks(authStore.userId!, "all");
+                taskStore.currentFilter = "all";
                 Navigator.pop(context);
               },
             ),
@@ -331,9 +362,9 @@ class _TaskPageState extends State<TaskPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          _showTaskAlert(context, taskStore, authStore.user!.uid);
+          _showTaskAlert(context, authStore.user!.uid);
         },
-        backgroundColor: MyColors.greenSofTec,
+        backgroundColor: MyColors.greenForest,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         icon: const Icon(Icons.task_alt),
         label: const Text(

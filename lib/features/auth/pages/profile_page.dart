@@ -41,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: MyColors.greenSofTec,
+        backgroundColor: MyColors.greenForest,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text("Profile"),
       ),
@@ -80,6 +80,14 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 50,
             ),
+            Text(
+              "${taskStore.currentFilter.toString().toUpperCase()} TASKS",
+              style: const TextStyle(
+                  color: Colors.black54,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
+            ),
+            const Divider(),
             ListTile(
               leading: const Icon(Icons.pending_outlined),
               title: const Text(

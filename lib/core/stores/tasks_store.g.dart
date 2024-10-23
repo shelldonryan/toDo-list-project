@@ -40,6 +40,22 @@ mixin _$TaskStore on TaskStoreBase, Store {
     });
   }
 
+  late final _$isTomorrowAtom =
+      Atom(name: 'TaskStoreBase.isTomorrow', context: context);
+
+  @override
+  bool get isTomorrow {
+    _$isTomorrowAtom.reportRead();
+    return super.isTomorrow;
+  }
+
+  @override
+  set isTomorrow(bool value) {
+    _$isTomorrowAtom.reportWrite(value, super.isTomorrow, () {
+      super.isTomorrow = value;
+    });
+  }
+
   late final _$tasksAtom = Atom(name: 'TaskStoreBase.tasks', context: context);
 
   @override
@@ -67,9 +83,10 @@ mixin _$TaskStore on TaskStoreBase, Store {
       AsyncAction('TaskStoreBase.addTask', context: context);
 
   @override
-  Future<void> addTask(String taskName, String description, String userId) {
+  Future<void> addTask(
+      String taskName, String description, String userId, bool isTomorrow) {
     return _$addTaskAsyncAction
-        .run(() => super.addTask(taskName, description, userId));
+        .run(() => super.addTask(taskName, description, userId, isTomorrow));
   }
 
   late final _$deleteTaskAsyncAction =
@@ -89,6 +106,15 @@ mixin _$TaskStore on TaskStoreBase, Store {
         .run(() => super.updateTaskStatus(id, isDone));
   }
 
+  late final _$updateIsTomorrowStatusAsyncAction =
+      AsyncAction('TaskStoreBase.updateIsTomorrowStatus', context: context);
+
+  @override
+  Future<void> updateIsTomorrowStatus(bool? value) {
+    return _$updateIsTomorrowStatusAsyncAction
+        .run(() => super.updateIsTomorrowStatus(value));
+  }
+
   late final _$updateTaskAsyncAction =
       AsyncAction('TaskStoreBase.updateTask', context: context);
 
@@ -102,6 +128,7 @@ mixin _$TaskStore on TaskStoreBase, Store {
   String toString() {
     return '''
 isLoading: ${isLoading},
+isTomorrow: ${isTomorrow},
 tasks: ${tasks},
 pendingTasks: ${pendingTasks},
 finishedTasks: ${finishedTasks}

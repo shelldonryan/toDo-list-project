@@ -15,6 +15,10 @@ abstract class TaskStoreBase with Store {
 
   @observable
   bool isLoading = false;
+  @observable
+  String currentFilter = "today";
+  @observable
+  bool isTomorrow = false;
 
   @observable
   ObservableList<Task> tasks = ObservableList<Task>();
@@ -40,40 +44,49 @@ abstract class TaskStoreBase with Store {
       final tasksUser = allTasks.where((task) => task.userId == uid);
 
       if (filter == "today") {
-        final today = DateTime.now();
-        final startDate = DateTime(today.year, today.month, today.day, 0, 0, 0);
-        final endDate = DateTime(today.year, today.month, today.day, 23, 59, 59);
+        DateTime today = DateTime.now();
+        DateTime startDate = DateTime(today.year, today.month, today.day, 0, 0, 0);
+        DateTime endDate =
+            DateTime(today.year, today.month, today.day, 23, 59, 59);
 
-        final taskToday = tasksUser.where((task) => task.createdAt.isAfter(startDate) && task.createdAt.isBefore(endDate));
+        final taskToday = tasksUser.where((task) =>
+            task.createdAt.isAfter(startDate) &&
+            task.createdAt.isBefore(endDate));
 
         tasks.addAll(taskToday);
-      } else if (filter == "week") {
+      } else if (filter == "tomorrow") {
+        DateTime tomorrow = DateTime.now().add(const Duration(days: 1));
+        DateTime startDate =
+            DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 0, 0, 0);
+        DateTime endDate =
+            DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 23, 59, 59);
 
-        final today = DateTime.now();
-        var startFilter = today.subtract(Duration(days: today.weekday - 1));
-        var endFilter = startFilter
+        final taskTomorrow = tasksUser.where((task) =>
+            task.createdAt.isAfter(startDate) &&
+            task.createdAt.isBefore(endDate));
+
+        tasks.addAll(taskTomorrow);
+      } else if (filter == "week") {
+        DateTime today = DateTime.now();
+        DateTime startFilter = DateTime(today.year, today.month, today.day, 0, 0, 0);
+        DateTime endFilter = today
             .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
         final taskWeek = tasksUser.where((task) =>
-            task.createdAt
-                .isAfter(startFilter.subtract(const Duration(days: 1))) &&
+            task.createdAt.isAfter(startFilter) &&
             task.createdAt.isBefore(endFilter.add(const Duration(seconds: 1))));
         tasks.addAll(taskWeek);
-        
       } else if (filter == "month") {
-        
-        final today = DateTime.now();
-        var startFilter = DateTime(today.year, today.month, 1);
-        var endFilter = DateTime(today.year, today.month + 1, 1)
+        DateTime today = DateTime.now();
+        DateTime startFilter = DateTime(today.year, today.month, 1);
+        DateTime endFilter = DateTime(today.year, today.month + 1, 1)
             .subtract(const Duration(seconds: 1));
 
         final taskMonth = tasksUser.where((task) =>
-            task.createdAt
-                .isAfter(startFilter.subtract(const Duration(seconds: 1))) &&
-            task.createdAt.isBefore(endFilter.add(const Duration(seconds: 1))));
+            task.createdAt.isAfter(startFilter) &&
+            task.createdAt.isBefore(endFilter.subtract(const Duration(seconds: 1))));
 
         tasks.addAll(taskMonth);
-        
       } else if (filter == "all") {
         tasks.addAll(tasksUser);
       }
@@ -83,10 +96,14 @@ abstract class TaskStoreBase with Store {
   }
 
   @action
-  Future<void> addTask(
-      String taskName, String description, String userId) async {
+  Future<void> addTask(String taskName, String description, String userId, bool isTomorrow) async {
     String id = uuid.v4();
     DateTime time = DateTime.now();
+
+    if (isTomorrow) {
+      time = DateTime.now().add(const Duration(days: 1));
+    }
+
     await _taskService.addTask(id, taskName, time, description, userId);
 
     tasks.add(Task(
@@ -122,8 +139,12 @@ abstract class TaskStoreBase with Store {
   }
 
   @action
-  Future<void> updateTask(
-      String id, String taskName, String taskDescription) async {
+  Future<void> updateIsTomorrowStatus(bool? value) async {
+    isTomorrow = value!;
+  }
+
+  @action
+  Future<void> updateTask(String id, String taskName, String taskDescription) async {
     await _taskService.updateTask(id, taskName, taskDescription);
 
     isLoading = true;

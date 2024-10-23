@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       title: 'To-Do List',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: MyColors.greenSofTec),
+        colorScheme: ColorScheme.fromSeed(seedColor: MyColors.greenForest),
         useMaterial3: false,
       ),
       home: const AuthCheck(),

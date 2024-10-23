@@ -16,7 +16,7 @@ InputDecoration getAuthInputDecoration(String label) {
     ),
     focusedBorder: const OutlineInputBorder(
       borderRadius: BorderRadius.horizontal(),
-      borderSide: BorderSide(color: MyColors.greenSofTec, width: 1.5),
+      borderSide: BorderSide(color: MyColors.greenForest, width: 1.5),
     ),
     errorBorder: const OutlineInputBorder(
         borderRadius: BorderRadius.horizontal(),
