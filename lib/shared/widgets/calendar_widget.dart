@@ -1,81 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:todo_list_project/core/controller/calendar_controller.dart';
 import 'package:todo_list_project/shared/themes/my_colors.dart';
 
-class CalendarWidget extends StatelessWidget {
-  
-  DateTime? focusedDate;
-  DateTime? rangeFirstDate;
-  DateTime? rangeEndDate;
-  bool isRange;
-
-  DateTime firstDate = DateTime.now().subtract(const Duration(days: 365));
-  DateTime endDate = DateTime.now().add(const Duration(days: 365));
+Widget calendarWidget({
+  required bool isRange,
+  required CalendarController controller,
+}) {
   CalendarFormat calendarFormat = CalendarFormat.month;
   Color color = MyColors.greenForest;
 
-  CalendarWidget({
-    super.key,
-    required this.focusedDate,
-    required this.rangeFirstDate,
-    required this.rangeEndDate,
-    required this.isRange,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TableCalendar(
-      focusedDay: focusedDate ?? DateTime.now(),
-      firstDay: firstDate,
-      lastDay: endDate,
-      calendarFormat: calendarFormat,
-      rangeStartDay: isRange ? rangeFirstDate : null,
-      rangeEndDay: isRange ? rangeEndDate : null,
-      rangeSelectionMode: isRange
-          ? RangeSelectionMode.toggledOn
-          : RangeSelectionMode.toggledOff,
-      selectedDayPredicate: (day) => isSameDay(day, focusedDate),
-      onFormatChanged: (CalendarFormat cf) {
-        calendarFormat = cf;
-      },
-      onDaySelected: (selectedDay, focusedDay) {
-        focusedDate = focusedDay;
-      },
-      onRangeSelected: (startDay, endDay, focusedDay) {
-        rangeFirstDate = startDay;
-        rangeEndDate = endDay;
-        focusedDate = focusedDay;
-      },
-      headerStyle: const HeaderStyle(
-        titleCentered: true,
-        formatButtonVisible: false,
-        titleTextStyle: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.black87,
-        ),
+  return TableCalendar(
+    focusedDay: controller.focusedDate,
+    firstDay: controller.firstDate,
+    lastDay: controller.endDate,
+    calendarFormat: calendarFormat,
+    rangeStartDay: isRange ? controller.rangeStartDate : null,
+    rangeEndDay: isRange ? controller.rangeEndDate : null,
+    rangeSelectionMode: isRange
+        ? RangeSelectionMode.toggledOn
+        : RangeSelectionMode.toggledOff,
+    selectedDayPredicate: (day) =>
+        isSameDay(day, controller.focusedDate),
+    onFormatChanged: (CalendarFormat cf) {
+      calendarFormat = cf;
+    },
+    onDaySelected: (selectedDay, focusedDay) {
+      controller.focusedDate = focusedDay;
+    },
+    onRangeSelected: (startDay, endDay, focusedDay) {
+      controller.rangeStartDate = startDay;
+      controller.rangeEndDate = endDay;
+      controller.focusedDate = focusedDay;
+    },
+    headerStyle: const HeaderStyle(
+      titleCentered: true,
+      formatButtonVisible: false,
+      titleTextStyle: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: Colors.black87,
       ),
-      calendarStyle: CalendarStyle(
-        todayDecoration: BoxDecoration(
-            shape: BoxShape.circle, color: color.withOpacity(0.2)),
-        selectedTextStyle: TextStyle(
-          color: Colors.white,
-          fontWeight: isSameDay(DateTime.now(), focusedDate)
-              ? FontWeight.normal
-              : FontWeight.normal,
-          fontSize: isSameDay(DateTime.now(), focusedDate) ? 16 : 14,
-        ),
-        selectedDecoration: BoxDecoration(shape: BoxShape.circle, color: color),
-        rangeStartDecoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color,
-        ),
-        rangeEndDecoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color,
-        ),
-        rangeHighlightColor: color.withOpacity(0.8),
+    ),
+    calendarStyle: CalendarStyle(
+      todayDecoration: BoxDecoration(
+          shape: BoxShape.circle, color: color.withOpacity(0.2)),
+      selectedTextStyle: TextStyle(
+        color: Colors.white,
+        fontWeight: isSameDay(DateTime.now(), controller.focusedDate)
+            ? FontWeight.normal
+            : FontWeight.normal,
+        fontSize: isSameDay(DateTime.now(), controller.focusedDate)
+            ? 16
+            : 14,
       ),
-    );
-  }
+      selectedDecoration: BoxDecoration(shape: BoxShape.circle, color: color),
+      rangeStartDecoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+      ),
+      rangeEndDecoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+      ),
+      rangeHighlightColor: color.withOpacity(0.8),
+    ),
+  );
 }

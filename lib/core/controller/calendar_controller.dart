@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 part 'calendar_controller.g.dart';
@@ -6,6 +5,8 @@ part 'calendar_controller.g.dart';
 class CalendarController = CalendarControllerBase with _$CalendarController;
 
 abstract class CalendarControllerBase with Store {
+  DateTime firstDate = DateTime.now().subtract(const Duration(days: 365));
+  DateTime endDate = DateTime.now().add(const Duration(days: 365));
 
   @observable
   DateTime focusedDate = DateTime.now();
