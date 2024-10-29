@@ -3,23 +3,20 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:todo_list_project/shared/themes/my_colors.dart';
 
 class CalendarWidget extends StatelessWidget {
-  final DateTime firstDate;
-  final DateTime endDate;
+  
   DateTime? focusedDate;
-  DateTime? selectedDate;
   DateTime? rangeFirstDate;
   DateTime? rangeEndDate;
   bool isRange;
 
+  DateTime firstDate = DateTime.now().subtract(const Duration(days: 365));
+  DateTime endDate = DateTime.now().add(const Duration(days: 365));
   CalendarFormat calendarFormat = CalendarFormat.month;
   Color color = MyColors.greenForest;
 
   CalendarWidget({
     super.key,
-    required this.firstDate,
-    required this.endDate,
     required this.focusedDate,
-    required this.selectedDate,
     required this.rangeFirstDate,
     required this.rangeEndDate,
     required this.isRange,

@@ -40,6 +40,22 @@ mixin _$TaskStore on TaskStoreBase, Store {
     });
   }
 
+  late final _$currentFilterAtom =
+      Atom(name: 'TaskStoreBase.currentFilter', context: context);
+
+  @override
+  String get currentFilter {
+    _$currentFilterAtom.reportRead();
+    return super.currentFilter;
+  }
+
+  @override
+  set currentFilter(String value) {
+    _$currentFilterAtom.reportWrite(value, super.currentFilter, () {
+      super.currentFilter = value;
+    });
+  }
+
   late final _$isTomorrowAtom =
       Atom(name: 'TaskStoreBase.isTomorrow', context: context);
 
@@ -128,6 +144,7 @@ mixin _$TaskStore on TaskStoreBase, Store {
   String toString() {
     return '''
 isLoading: ${isLoading},
+currentFilter: ${currentFilter},
 isTomorrow: ${isTomorrow},
 tasks: ${tasks},
 pendingTasks: ${pendingTasks},
