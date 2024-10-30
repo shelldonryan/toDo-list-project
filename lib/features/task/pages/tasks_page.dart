@@ -268,7 +268,7 @@ class _TaskPageState extends State<TaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
+    taskStore.loadTasks(authStore.userId!, taskStore.currentFilter, null, null);
 
     return Scaffold(
       appBar: AppBar(
@@ -297,7 +297,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Today'),
               onTap: () {
                 taskStore.currentFilter = "today";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter, null, null);
                 Navigator.pop(context);
               },
             ),
@@ -306,7 +306,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Tomorrow'),
               onTap: () {
                 taskStore.currentFilter = "tomorrow";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter, null, null);
                 Navigator.pop(context);
               },
             ),
@@ -315,7 +315,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Week'),
               onTap: () {
                 taskStore.currentFilter = "week";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter, null, null);
                 Navigator.pop(context);
               },
             ),
@@ -324,7 +324,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Month'),
               onTap: () {
                 taskStore.currentFilter = "month";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter, null, null);
                 Navigator.pop(context);
               },
             ),
@@ -332,8 +332,8 @@ class _TaskPageState extends State<TaskPage> {
               leading: const Icon(Icons.list),
               title: const Text('All'),
               onTap: () {
-                taskStore.loadTasks(authStore.userId!, "all");
                 taskStore.currentFilter = "all";
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter, null, null);
                 Navigator.pop(context);
               },
             ),
@@ -346,7 +346,7 @@ class _TaskPageState extends State<TaskPage> {
                     context: context,
                     builder: (context) {
                       return Observer(
-                        builder:(_) => AlertDialog(
+                        builder: (_) => AlertDialog(
                           content: SingleChildScrollView(
                             child: Column(
                               children: [
@@ -358,7 +358,15 @@ class _TaskPageState extends State<TaskPage> {
                                       controller: calendarController),
                                 ),
                                 ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      taskStore.currentFilter = "custom";
+                                      taskStore.loadTasks(
+                                          authStore.userId!,
+                                          taskStore.currentFilter,
+                                          calendarController.rangeStartDate,
+                                          calendarController.rangeEndDate);
+                                      Navigator.pop(context);
+                                    },
                                     child: const Icon(Icons.search))
                               ],
                             ),
@@ -366,8 +374,6 @@ class _TaskPageState extends State<TaskPage> {
                         ),
                       );
                     });
-                // taskStore.loadTasks(authStore.userId!, "all");
-                // taskStore.currentFilter = "custom";
               },
             ),
           ],

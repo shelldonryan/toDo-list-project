@@ -34,7 +34,7 @@ abstract class TaskStoreBase with Store {
   }
 
   @action
-  Future<void> loadTasks(String uid, String filter) async {
+  Future<void> loadTasks(String uid, String filter, DateTime? startRange, DateTime? endRange) async {
     isLoading = true;
 
     final allTasks = await _taskService.getTasks();
@@ -89,6 +89,16 @@ abstract class TaskStoreBase with Store {
         tasks.addAll(taskMonth);
       } else if (filter == "all") {
         tasks.addAll(tasksUser);
+      } else if (filter == "custom") {
+        DateTime today = DateTime.now();
+        DateTime startFilter = startRange!;
+        DateTime endFilter = endRange!;
+
+        final taskCustom = tasksUser.where((task) =>
+        task.createdAt.isAfter(startFilter) &&
+            task.createdAt.isBefore(endFilter.subtract(const Duration(seconds: 1))));
+
+        tasks.addAll(taskCustom);
       }
     }
 

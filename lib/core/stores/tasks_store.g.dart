@@ -91,8 +91,10 @@ mixin _$TaskStore on TaskStoreBase, Store {
       AsyncAction('TaskStoreBase.loadTasks', context: context);
 
   @override
-  Future<void> loadTasks(String uid, String filter) {
-    return _$loadTasksAsyncAction.run(() => super.loadTasks(uid, filter));
+  Future<void> loadTasks(
+      String uid, String filter, DateTime? startRange, DateTime? endRange) {
+    return _$loadTasksAsyncAction
+        .run(() => super.loadTasks(uid, filter, startRange, endRange));
   }
 
   late final _$addTaskAsyncAction =
