@@ -4,8 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/features/task/models/task.dart';
-import 'package:todo_list_project/main.dart';
+import 'package:todo_list_project/shared/utils/calendar_widget.dart';
 
+import '../../../core/controller/calendar_controller.dart';
 import '../../../shared/themes/my_colors.dart';
 
 class TaskPage extends StatefulWidget {
@@ -18,6 +19,7 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   late final TextEditingController titleController;
   late final TextEditingController descriptionController;
+  late final CalendarController calendarController;
   late final TaskStore taskStore;
   late final AuthStore authStore;
 
@@ -97,14 +99,18 @@ class _TaskPageState extends State<TaskPage> {
                     TextField(
                       controller: titleController,
                       decoration: const InputDecoration(
-                          labelText: "what's the task name?", labelStyle: TextStyle(color: Colors.black54),),
+                        labelText: "what's the task name?",
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
                     ),
                     TextField(
                       controller: descriptionController,
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       decoration: const InputDecoration(
-                          labelText: "what's the description?", labelStyle: TextStyle(color: Colors.black54),),
+                        labelText: "what's the description?",
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
                     ),
                     const SizedBox(
                       height: 8,
@@ -116,7 +122,9 @@ class _TaskPageState extends State<TaskPage> {
                           "Schedule for tomorrow",
                           style: TextStyle(
                               decoration: TextDecoration.none,
-                              color: !taskStore.isTomorrow ? Colors.black54 : MyColors.greenForest),
+                              color: !taskStore.isTomorrow
+                                  ? Colors.black54
+                                  : MyColors.greenForest),
                         ),
                         Switch(
                           value: taskStore.isTomorrow,
@@ -190,7 +198,7 @@ class _TaskPageState extends State<TaskPage> {
             ));
   }
 
-  showListViewStatus(List<Task> tasks, String label, TaskStore store) {
+  showListViewStatus(List<Task> tasks, String label) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
@@ -226,7 +234,7 @@ class _TaskPageState extends State<TaskPage> {
                     leading: Checkbox(
                         value: task.isDone,
                         onChanged: (bool? isDone) =>
-                            store.updateTaskStatus(task.id, isDone!)),
+                            taskStore.updateTaskStatus(task.id, isDone!)),
                     onLongPress: () {
                       _showEditTaskAlert(context, task);
                     },
@@ -248,6 +256,7 @@ class _TaskPageState extends State<TaskPage> {
     super.initState();
     titleController = TextEditingController();
     descriptionController = TextEditingController();
+    calendarController = CalendarController();
   }
 
   @override
@@ -328,6 +337,39 @@ class _TaskPageState extends State<TaskPage> {
                 Navigator.pop(context);
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.filter_alt),
+              title: const Text('Custom'),
+              onTap: () {
+                Navigator.pop(context);
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Observer(
+                        builder:(_) => AlertDialog(
+                          content: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  width: double.maxFinite,
+                                  height: 395,
+                                  child: calendarWidget(
+                                      isRange: true,
+                                      controller: calendarController),
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {},
+                                    child: const Icon(Icons.search))
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+                // taskStore.loadTasks(authStore.userId!, "all");
+                // taskStore.currentFilter = "custom";
+              },
+            ),
           ],
         ),
       ),
@@ -350,11 +392,11 @@ class _TaskPageState extends State<TaskPage> {
               const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 80),
           child: Column(
             children: [
-              showListViewStatus(pendingTasks, 'Pending', taskStore),
+              showListViewStatus(pendingTasks, 'Pending'),
               const SizedBox(
                 height: 8,
               ),
-              showListViewStatus(doneTasks, 'Finished', taskStore),
+              showListViewStatus(doneTasks, 'Finished'),
             ],
           ),
         );

@@ -6,7 +6,7 @@ import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
 import 'package:todo_list_project/features/auth/widgets/user_list.dart';
 import '../../../shared/themes/my_colors.dart';
-import '../../../shared/widgets/show_snack_bar.dart';
+import '../../../shared/utils/show_snack_bar.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

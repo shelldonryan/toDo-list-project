@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
 
-import '../../../shared/widgets/show_snack_bar.dart';
+import '../../../shared/utils/show_snack_bar.dart';
 import '../models/user.dart';
 
 userList({required BuildContext context, required List<Users> users, required String futureType}) {

@@ -44,7 +44,7 @@ Widget calendarWidget({
     ),
     calendarStyle: CalendarStyle(
       todayDecoration: BoxDecoration(
-          shape: BoxShape.circle, color: color.withOpacity(0.2)),
+          shape: BoxShape.circle, color: color.withOpacity(0.6)),
       selectedTextStyle: TextStyle(
         color: Colors.white,
         fontWeight: isSameDay(DateTime.now(), controller.focusedDate)
@@ -63,7 +63,7 @@ Widget calendarWidget({
         shape: BoxShape.circle,
         color: color,
       ),
-      rangeHighlightColor: color.withOpacity(0.8),
+      rangeHighlightColor: color.withOpacity(0.15),
     ),
   );
 }
