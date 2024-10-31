@@ -19,6 +19,10 @@ abstract class TaskStoreBase with Store {
   String currentFilter = "today";
   @observable
   bool isTomorrow = false;
+  @observable
+  DateTime? startRangeDate;
+  @observable
+  DateTime? endRangeDate;
 
   @observable
   ObservableList<Task> tasks = ObservableList<Task>();
@@ -34,7 +38,7 @@ abstract class TaskStoreBase with Store {
   }
 
   @action
-  Future<void> loadTasks(String uid, String filter, DateTime? startRange, DateTime? endRange) async {
+  Future<void> loadTasks(String uid, String filter) async {
     isLoading = true;
 
     final allTasks = await _taskService.getTasks();
@@ -45,7 +49,8 @@ abstract class TaskStoreBase with Store {
 
       if (filter == "today") {
         DateTime today = DateTime.now();
-        DateTime startDate = DateTime(today.year, today.month, today.day, 0, 0, 0);
+        DateTime startDate =
+            DateTime(today.year, today.month, today.day, 0, 0, 0);
         DateTime endDate =
             DateTime(today.year, today.month, today.day, 23, 59, 59);
 
@@ -68,7 +73,8 @@ abstract class TaskStoreBase with Store {
         tasks.addAll(taskTomorrow);
       } else if (filter == "week") {
         DateTime today = DateTime.now();
-        DateTime startFilter = DateTime(today.year, today.month, today.day, 0, 0, 0);
+        DateTime startFilter =
+            DateTime(today.year, today.month, today.day, 0, 0, 0);
         DateTime endFilter = today
             .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
@@ -84,19 +90,20 @@ abstract class TaskStoreBase with Store {
 
         final taskMonth = tasksUser.where((task) =>
             task.createdAt.isAfter(startFilter) &&
-            task.createdAt.isBefore(endFilter.subtract(const Duration(seconds: 1))));
+            task.createdAt
+                .isBefore(endFilter.subtract(const Duration(seconds: 1))));
 
         tasks.addAll(taskMonth);
       } else if (filter == "all") {
         tasks.addAll(tasksUser);
       } else if (filter == "custom") {
-        DateTime today = DateTime.now();
-        DateTime startFilter = startRange!;
-        DateTime endFilter = endRange!;
+        DateTime startFilter = startRangeDate!;
+        DateTime endFilter = endRangeDate!.add(const Duration(hours: 23, minutes: 59, seconds: 59));
 
         final taskCustom = tasksUser.where((task) =>
-        task.createdAt.isAfter(startFilter) &&
-            task.createdAt.isBefore(endFilter.subtract(const Duration(seconds: 1))));
+            task.createdAt.isAfter(startFilter) &&
+            task.createdAt
+                .isBefore(endFilter));
 
         tasks.addAll(taskCustom);
       }
@@ -106,7 +113,8 @@ abstract class TaskStoreBase with Store {
   }
 
   @action
-  Future<void> addTask(String taskName, String description, String userId, bool isTomorrow) async {
+  Future<void> addTask(String taskName, String description, String userId,
+      bool isTomorrow) async {
     String id = uuid.v4();
     DateTime time = DateTime.now();
 
@@ -154,7 +162,8 @@ abstract class TaskStoreBase with Store {
   }
 
   @action
-  Future<void> updateTask(String id, String taskName, String taskDescription) async {
+  Future<void> updateTask(
+      String id, String taskName, String taskDescription) async {
     await _taskService.updateTask(id, taskName, taskDescription);
 
     isLoading = true;

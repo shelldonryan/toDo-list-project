@@ -268,7 +268,7 @@ class _TaskPageState extends State<TaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    taskStore.loadTasks(authStore.userId!, taskStore.currentFilter, null, null);
+    taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
 
     return Scaffold(
       appBar: AppBar(
@@ -297,7 +297,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Today'),
               onTap: () {
                 taskStore.currentFilter = "today";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter, null, null);
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
                 Navigator.pop(context);
               },
             ),
@@ -306,7 +306,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Tomorrow'),
               onTap: () {
                 taskStore.currentFilter = "tomorrow";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter, null, null);
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
                 Navigator.pop(context);
               },
             ),
@@ -315,7 +315,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Week'),
               onTap: () {
                 taskStore.currentFilter = "week";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter, null, null);
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
                 Navigator.pop(context);
               },
             ),
@@ -324,7 +324,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Month'),
               onTap: () {
                 taskStore.currentFilter = "month";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter, null, null);
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
                 Navigator.pop(context);
               },
             ),
@@ -333,7 +333,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('All'),
               onTap: () {
                 taskStore.currentFilter = "all";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter, null, null);
+                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
                 Navigator.pop(context);
               },
             ),
@@ -360,11 +360,11 @@ class _TaskPageState extends State<TaskPage> {
                                 ElevatedButton(
                                     onPressed: () {
                                       taskStore.currentFilter = "custom";
+                                      taskStore.startRangeDate = calendarController.rangeStartDate;
+                                      taskStore.endRangeDate = calendarController.rangeEndDate;
                                       taskStore.loadTasks(
                                           authStore.userId!,
-                                          taskStore.currentFilter,
-                                          calendarController.rangeStartDate,
-                                          calendarController.rangeEndDate);
+                                          taskStore.currentFilter);
                                       Navigator.pop(context);
                                     },
                                     child: const Icon(Icons.search))
@@ -387,10 +387,10 @@ class _TaskPageState extends State<TaskPage> {
         }
 
         List<Task> pendingTasks = taskStore.tasks
-            .where((task) => !task.isDone && task.userId == uid)
+            .where((task) => !task.isDone)
             .toList();
         List<Task> doneTasks = taskStore.tasks
-            .where((task) => task.isDone && task.userId == uid)
+            .where((task) => task.isDone)
             .toList();
 
         return Container(

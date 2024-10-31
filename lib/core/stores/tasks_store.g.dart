@@ -72,6 +72,38 @@ mixin _$TaskStore on TaskStoreBase, Store {
     });
   }
 
+  late final _$startRangeDateAtom =
+      Atom(name: 'TaskStoreBase.startRangeDate', context: context);
+
+  @override
+  DateTime? get startRangeDate {
+    _$startRangeDateAtom.reportRead();
+    return super.startRangeDate;
+  }
+
+  @override
+  set startRangeDate(DateTime? value) {
+    _$startRangeDateAtom.reportWrite(value, super.startRangeDate, () {
+      super.startRangeDate = value;
+    });
+  }
+
+  late final _$endRangeDateAtom =
+      Atom(name: 'TaskStoreBase.endRangeDate', context: context);
+
+  @override
+  DateTime? get endRangeDate {
+    _$endRangeDateAtom.reportRead();
+    return super.endRangeDate;
+  }
+
+  @override
+  set endRangeDate(DateTime? value) {
+    _$endRangeDateAtom.reportWrite(value, super.endRangeDate, () {
+      super.endRangeDate = value;
+    });
+  }
+
   late final _$tasksAtom = Atom(name: 'TaskStoreBase.tasks', context: context);
 
   @override
@@ -91,10 +123,8 @@ mixin _$TaskStore on TaskStoreBase, Store {
       AsyncAction('TaskStoreBase.loadTasks', context: context);
 
   @override
-  Future<void> loadTasks(
-      String uid, String filter, DateTime? startRange, DateTime? endRange) {
-    return _$loadTasksAsyncAction
-        .run(() => super.loadTasks(uid, filter, startRange, endRange));
+  Future<void> loadTasks(String uid, String filter) {
+    return _$loadTasksAsyncAction.run(() => super.loadTasks(uid, filter));
   }
 
   late final _$addTaskAsyncAction =
@@ -148,6 +178,8 @@ mixin _$TaskStore on TaskStoreBase, Store {
 isLoading: ${isLoading},
 currentFilter: ${currentFilter},
 isTomorrow: ${isTomorrow},
+startRangeDate: ${startRangeDate},
+endRangeDate: ${endRangeDate},
 tasks: ${tasks},
 pendingTasks: ${pendingTasks},
 finishedTasks: ${finishedTasks}
