@@ -9,19 +9,12 @@ part of 'tasks_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$TaskStore on TaskStoreBase, Store {
-  Computed<ObservableList<Task>>? _$pendingTasksComputed;
+  Computed<List<Task>>? _$filteredTasksComputed;
 
   @override
-  ObservableList<Task> get pendingTasks => (_$pendingTasksComputed ??=
-          Computed<ObservableList<Task>>(() => super.pendingTasks,
-              name: 'TaskStoreBase.pendingTasks'))
-      .value;
-  Computed<ObservableList<Task>>? _$finishedTasksComputed;
-
-  @override
-  ObservableList<Task> get finishedTasks => (_$finishedTasksComputed ??=
-          Computed<ObservableList<Task>>(() => super.finishedTasks,
-              name: 'TaskStoreBase.finishedTasks'))
+  List<Task> get filteredTasks => (_$filteredTasksComputed ??=
+          Computed<List<Task>>(() => super.filteredTasks,
+              name: 'TaskStoreBase.filteredTasks'))
       .value;
 
   late final _$isLoadingAtom =
@@ -123,8 +116,8 @@ mixin _$TaskStore on TaskStoreBase, Store {
       AsyncAction('TaskStoreBase.loadTasks', context: context);
 
   @override
-  Future<void> loadTasks(String uid, String filter) {
-    return _$loadTasksAsyncAction.run(() => super.loadTasks(uid, filter));
+  Future<void> loadTasks(String uid) {
+    return _$loadTasksAsyncAction.run(() => super.loadTasks(uid));
   }
 
   late final _$addTaskAsyncAction =
@@ -181,8 +174,7 @@ isTomorrow: ${isTomorrow},
 startRangeDate: ${startRangeDate},
 endRangeDate: ${endRangeDate},
 tasks: ${tasks},
-pendingTasks: ${pendingTasks},
-finishedTasks: ${finishedTasks}
+filteredTasks: ${filteredTasks}
     ''';
   }
 }

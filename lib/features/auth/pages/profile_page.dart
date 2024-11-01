@@ -49,33 +49,36 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (_) => ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            Column(
-              children: [
-                // const CircleAvatar(
-                //   radius: 50,
-                //   backgroundImage: NetworkImage(
-                //       "https://images.unsplash.com/photo-1727638786395-6df4fc4a2048?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw4fHx8ZW58MHx8fHx8"),
-                // ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  userStore.username,
-                  style: const TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                children: [
+                  // const CircleAvatar(
+                  //   radius: 50,
+                  //   backgroundImage: NetworkImage(
+                  //       "https://images.unsplash.com/photo-1727638786395-6df4fc4a2048?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw4fHx8ZW58MHx8fHx8"),
+                  // ),
+                  Text(
+                    userStore.username,
+                    style: const TextStyle(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-                Text(
-                  userStore.userType,
-                  style: const TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w200,
-                    fontSize: 14,
+                  const SizedBox(
+                    height: 5,
                   ),
-                ),
-              ],
+                  Text(
+                    userStore.userType,
+                    style: const TextStyle(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w200,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               height: 50,
@@ -99,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               trailing: Text(
-                taskStore.pendingTasks.length.toString(),
+                taskStore.tasks.length.toString(),
                 style: const TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w500,
@@ -118,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               trailing: Text(
-                taskStore.finishedTasks.length.toString(),
+                taskStore.tasks.length.toString(),
                 style: const TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w500,

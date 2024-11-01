@@ -268,8 +268,6 @@ class _TaskPageState extends State<TaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -297,7 +295,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Today'),
               onTap: () {
                 taskStore.currentFilter = "today";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
+                taskStore.loadTasks(authStore.userId!);
                 Navigator.pop(context);
               },
             ),
@@ -306,7 +304,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Tomorrow'),
               onTap: () {
                 taskStore.currentFilter = "tomorrow";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
+                taskStore.loadTasks(authStore.userId!);
                 Navigator.pop(context);
               },
             ),
@@ -315,7 +313,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Week'),
               onTap: () {
                 taskStore.currentFilter = "week";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
+                taskStore.loadTasks(authStore.userId!);
                 Navigator.pop(context);
               },
             ),
@@ -324,7 +322,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('Month'),
               onTap: () {
                 taskStore.currentFilter = "month";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
+                taskStore.loadTasks(authStore.userId!);
                 Navigator.pop(context);
               },
             ),
@@ -333,7 +331,7 @@ class _TaskPageState extends State<TaskPage> {
               title: const Text('All'),
               onTap: () {
                 taskStore.currentFilter = "all";
-                taskStore.loadTasks(authStore.userId!, taskStore.currentFilter);
+                taskStore.loadTasks(authStore.userId!);
                 Navigator.pop(context);
               },
             ),
@@ -363,8 +361,7 @@ class _TaskPageState extends State<TaskPage> {
                                       taskStore.startRangeDate = calendarController.rangeStartDate;
                                       taskStore.endRangeDate = calendarController.rangeEndDate;
                                       taskStore.loadTasks(
-                                          authStore.userId!,
-                                          taskStore.currentFilter);
+                                          authStore.userId!);
                                       Navigator.pop(context);
                                     },
                                     child: const Icon(Icons.search))
@@ -386,9 +383,10 @@ class _TaskPageState extends State<TaskPage> {
           return const Center(child: LinearProgressIndicator());
         }
 
-        List<Task> pendingTasks = taskStore.tasks
-            .where((task) => !task.isDone)
-            .toList();
+        taskStore.loadTasks(uid);
+
+        List<Task> pendingTasks = taskStore.filteredTasks
+            .where((task) => !task.isDone).toList();
         List<Task> doneTasks = taskStore.tasks
             .where((task) => task.isDone)
             .toList();

@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:todo_list_project/core/services/tasks_service.dart';
 import 'package:uuid/uuid.dart';
 import '../../features/task/models/task.dart';
+import '../utils/task_filter.dart';
 
 part 'tasks_store.g.dart';
 
@@ -9,9 +11,10 @@ class TaskStore = TaskStoreBase with _$TaskStore;
 
 abstract class TaskStoreBase with Store {
   final TaskService _taskService;
+  final TaskFilterController _filterController;
   final Uuid uuid = const Uuid();
 
-  TaskStoreBase(this._taskService);
+  TaskStoreBase(this._taskService) : _filterController = TaskFilterController();
 
   @observable
   bool isLoading = false;
@@ -28,17 +31,12 @@ abstract class TaskStoreBase with Store {
   ObservableList<Task> tasks = ObservableList<Task>();
 
   @computed
-  ObservableList<Task> get pendingTasks {
-    return ObservableList<Task>.of(tasks.where((task) => task.isDone == false));
-  }
-
-  @computed
-  ObservableList<Task> get finishedTasks {
-    return ObservableList<Task>.of(tasks.where((task) => task.isDone == true));
-  }
+  List<Task> get filteredTasks => ObservableList<Task>.of(
+      _filterController.filterTasks(tasks.toList(), currentFilter,
+          startRangeDate: startRangeDate, endRangeDate: endRangeDate));
 
   @action
-  Future<void> loadTasks(String uid, String filter) async {
+  Future<void> loadTasks(String uid) async {
     isLoading = true;
 
     final allTasks = await _taskService.getTasks();
@@ -47,66 +45,7 @@ abstract class TaskStoreBase with Store {
     if (allTasks.isNotEmpty) {
       final tasksUser = allTasks.where((task) => task.userId == uid);
 
-      if (filter == "today") {
-        DateTime today = DateTime.now();
-        DateTime startDate =
-            DateTime(today.year, today.month, today.day, 0, 0, 0);
-        DateTime endDate =
-            DateTime(today.year, today.month, today.day, 23, 59, 59);
-
-        final taskToday = tasksUser.where((task) =>
-            task.createdAt.isAfter(startDate) &&
-            task.createdAt.isBefore(endDate));
-
-        tasks.addAll(taskToday);
-      } else if (filter == "tomorrow") {
-        DateTime tomorrow = DateTime.now().add(const Duration(days: 1));
-        DateTime startDate =
-            DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 0, 0, 0);
-        DateTime endDate =
-            DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 23, 59, 59);
-
-        final taskTomorrow = tasksUser.where((task) =>
-            task.createdAt.isAfter(startDate) &&
-            task.createdAt.isBefore(endDate));
-
-        tasks.addAll(taskTomorrow);
-      } else if (filter == "week") {
-        DateTime today = DateTime.now();
-        DateTime startFilter =
-            DateTime(today.year, today.month, today.day, 0, 0, 0);
-        DateTime endFilter = today
-            .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
-
-        final taskWeek = tasksUser.where((task) =>
-            task.createdAt.isAfter(startFilter) &&
-            task.createdAt.isBefore(endFilter.add(const Duration(seconds: 1))));
-        tasks.addAll(taskWeek);
-      } else if (filter == "month") {
-        DateTime today = DateTime.now();
-        DateTime startFilter = DateTime(today.year, today.month, 1);
-        DateTime endFilter = DateTime(today.year, today.month + 1, 1)
-            .subtract(const Duration(seconds: 1));
-
-        final taskMonth = tasksUser.where((task) =>
-            task.createdAt.isAfter(startFilter) &&
-            task.createdAt
-                .isBefore(endFilter.subtract(const Duration(seconds: 1))));
-
-        tasks.addAll(taskMonth);
-      } else if (filter == "all") {
-        tasks.addAll(tasksUser);
-      } else if (filter == "custom") {
-        DateTime startFilter = startRangeDate!;
-        DateTime endFilter = endRangeDate!.add(const Duration(hours: 23, minutes: 59, seconds: 59));
-
-        final taskCustom = tasksUser.where((task) =>
-            task.createdAt.isAfter(startFilter) &&
-            task.createdAt
-                .isBefore(endFilter));
-
-        tasks.addAll(taskCustom);
-      }
+      tasks.addAll(tasksUser);
     }
 
     isLoading = false;
@@ -123,14 +62,15 @@ abstract class TaskStoreBase with Store {
     }
 
     await _taskService.addTask(id, taskName, time, description, userId);
-
-    tasks.add(Task(
-        id: id,
-        createdAt: time,
-        taskName: taskName,
-        isDone: false,
-        description: description,
-        userId: userId));
+    if (!isTomorrow) {
+      tasks.add(Task(
+          id: id,
+          createdAt: time,
+          taskName: taskName,
+          isDone: false,
+          description: description,
+          userId: userId));
+    }
   }
 
   @action
