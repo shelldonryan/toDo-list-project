@@ -5,6 +5,7 @@ import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
 import 'package:todo_list_project/features/auth/widgets/user_list.dart';
+import 'package:todo_list_project/shared/utils/format_string.dart';
 import '../../../shared/themes/my_colors.dart';
 import '../../../shared/utils/show_snack_bar.dart';
 
@@ -84,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 50,
             ),
             Text(
-              "${taskStore.currentFilter.toString().toUpperCase()} TASKS",
+              "${taskStore.currentFilter.toString().capitalize()} Tasks",
               style: const TextStyle(
                   color: Colors.black54,
                   fontSize: 16,
