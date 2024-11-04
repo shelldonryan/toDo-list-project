@@ -13,7 +13,7 @@ class TaskFilterController {
       case "month":
         return _filterMonthTasks(allTasks);
       case "custom":
-        return _filterCustomTasks(allTasks, startRangeDate!, endRangeDate!);
+        return _filterCustomTasks(allTasks, startRangeDate!, endRangeDate ?? startRangeDate);
       case "all":
       default:
         return allTasks;

@@ -387,7 +387,7 @@ class _TaskPageState extends State<TaskPage> {
 
         List<Task> pendingTasks = taskStore.filteredTasks
             .where((task) => !task.isDone).toList();
-        List<Task> doneTasks = taskStore.tasks
+        List<Task> doneTasks = taskStore.filteredTasks
             .where((task) => task.isDone)
             .toList();
 

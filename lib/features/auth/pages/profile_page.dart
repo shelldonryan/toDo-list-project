@@ -102,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               trailing: Text(
-                taskStore.tasks.length.toString(),
+                taskStore.filteredTasks.where((task) => !task.isDone).length.toString(),
                 style: const TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w500,
@@ -121,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               trailing: Text(
-                taskStore.tasks.length.toString(),
+                taskStore.filteredTasks.where((task) => task.isDone).length.toString(),
                 style: const TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w500,
@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               trailing: Text(
-                taskStore.tasks.length.toString(),
+                taskStore.filteredTasks.length.toString(),
                 style: const TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w500,
