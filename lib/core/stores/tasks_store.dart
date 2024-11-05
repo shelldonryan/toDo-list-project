@@ -21,7 +21,9 @@ abstract class TaskStoreBase with Store {
   @observable
   String currentFilter = "today";
   @observable
-  bool isTomorrow = false;
+  bool taskMode = true;
+  @observable
+  bool isNextDay = false;
   @observable
   DateTime? startRangeDate;
   @observable
@@ -53,24 +55,23 @@ abstract class TaskStoreBase with Store {
 
   @action
   Future<void> addTask(String taskName, String description, String userId,
-      bool isTomorrow) async {
+      bool isNextDay, DateTime scheduleDay) async {
     String id = uuid.v4();
-    DateTime time = DateTime.now();
+    DateTime time = scheduleDay;
 
-    if (isTomorrow) {
-      time = DateTime.now().add(const Duration(days: 1));
+    if (isNextDay) {
+      time = time.add(const Duration(days: 1));
     }
 
     await _taskService.addTask(id, taskName, time, description, userId);
-    if (!isTomorrow) {
-      tasks.add(Task(
-          id: id,
-          createdAt: time,
-          taskName: taskName,
-          isDone: false,
-          description: description,
-          userId: userId));
-    }
+
+    tasks.add(Task(
+        id: id,
+        createdAt: time,
+        taskName: taskName,
+        isDone: false,
+        description: description,
+        userId: userId));
   }
 
   @action
@@ -97,8 +98,8 @@ abstract class TaskStoreBase with Store {
   }
 
   @action
-  Future<void> updateIsTomorrowStatus(bool? value) async {
-    isTomorrow = value!;
+  Future<void> updateIsNextDayStatus(bool? value) async {
+    isNextDay = value!;
   }
 
   @action

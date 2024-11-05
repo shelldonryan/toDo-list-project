@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/features/task/models/task.dart';
+import 'package:todo_list_project/features/task/pages/schedule_page.dart';
 import 'package:todo_list_project/shared/utils/calendar_widget.dart';
 
 import '../../../core/controller/calendar_controller.dart';
@@ -122,14 +123,14 @@ class _TaskPageState extends State<TaskPage> {
                           "Schedule for tomorrow",
                           style: TextStyle(
                               decoration: TextDecoration.none,
-                              color: !taskStore.isTomorrow
+                              color: !taskStore.isNextDay
                                   ? Colors.black54
                                   : MyColors.greenForest),
                         ),
                         Switch(
-                          value: taskStore.isTomorrow,
+                          value: taskStore.isNextDay,
                           onChanged: (bool? value) =>
-                              taskStore.updateIsTomorrowStatus(value),
+                              taskStore.isNextDay = !taskStore.isNextDay,
                         ),
                       ],
                     ),
@@ -143,7 +144,8 @@ class _TaskPageState extends State<TaskPage> {
                               titleController.text,
                               descriptionController.text,
                               uid,
-                              taskStore.isTomorrow);
+                              taskStore.isNextDay,
+                              DateTime.now());
                           titleController.clear();
                           descriptionController.clear();
                           Navigator.pop(context);
@@ -251,6 +253,14 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
+  void handleClick(int item) {
+    switch (item) {
+      case 0:
+        taskStore.taskMode = !taskStore.taskMode;
+       break;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -274,6 +284,14 @@ class _TaskPageState extends State<TaskPage> {
         backgroundColor: MyColors.greenForest,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text("Task List"),
+        actions: [
+          PopupMenuButton<int>(
+              onSelected: (item) => handleClick(item),
+              itemBuilder: (context) => [
+                    const PopupMenuItem<int>(
+                        value: 0, child: Text("Task Mode")),
+                  ])
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -351,17 +369,18 @@ class _TaskPageState extends State<TaskPage> {
                                 SizedBox(
                                   width: double.maxFinite,
                                   height: 395,
-                                  child: calendarWidget(
+                                  child: CalendarWidget(
                                       isRange: true,
                                       controller: calendarController),
                                 ),
                                 ElevatedButton(
                                     onPressed: () {
                                       taskStore.currentFilter = "custom";
-                                      taskStore.startRangeDate = calendarController.rangeStartDate;
-                                      taskStore.endRangeDate = calendarController.rangeEndDate;
-                                      taskStore.loadTasks(
-                                          authStore.userId!);
+                                      taskStore.startRangeDate =
+                                          calendarController.rangeStartDate;
+                                      taskStore.endRangeDate =
+                                          calendarController.rangeEndDate;
+                                      taskStore.loadTasks(authStore.userId!);
                                       Navigator.pop(context);
                                     },
                                     child: const Icon(Icons.search))
@@ -385,11 +404,10 @@ class _TaskPageState extends State<TaskPage> {
 
         taskStore.loadTasks(uid);
 
-        List<Task> pendingTasks = taskStore.filteredTasks
-            .where((task) => !task.isDone).toList();
-        List<Task> doneTasks = taskStore.filteredTasks
-            .where((task) => task.isDone)
-            .toList();
+        List<Task> pendingTasks =
+            taskStore.filteredTasks.where((task) => !task.isDone).toList();
+        List<Task> doneTasks =
+            taskStore.filteredTasks.where((task) => task.isDone).toList();
 
         return Container(
           padding:
@@ -406,16 +424,21 @@ class _TaskPageState extends State<TaskPage> {
         );
       }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          _showTaskAlert(context, authStore.user!.uid);
-        },
-        backgroundColor: MyColors.greenForest,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        icon: const Icon(Icons.task_alt),
-        label: const Text(
-          "Add Task",
-          style: TextStyle(fontWeight: FontWeight.bold),
+      floatingActionButton: Observer(
+        builder:(_) => FloatingActionButton.extended(
+          onPressed: () {
+            taskStore.taskMode
+                ? _showTaskAlert(context, authStore.user!.uid)
+                : Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const ScheduleTaskPage()));
+          },
+          backgroundColor: MyColors.greenForest,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          icon: const Icon(Icons.task_alt),
+          label: Text(
+            taskStore.taskMode ? "Add Task" : "Schedule Task",
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );

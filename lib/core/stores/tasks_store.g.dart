@@ -49,19 +49,35 @@ mixin _$TaskStore on TaskStoreBase, Store {
     });
   }
 
-  late final _$isTomorrowAtom =
-      Atom(name: 'TaskStoreBase.isTomorrow', context: context);
+  late final _$taskModeAtom =
+      Atom(name: 'TaskStoreBase.taskMode', context: context);
 
   @override
-  bool get isTomorrow {
-    _$isTomorrowAtom.reportRead();
-    return super.isTomorrow;
+  bool get taskMode {
+    _$taskModeAtom.reportRead();
+    return super.taskMode;
   }
 
   @override
-  set isTomorrow(bool value) {
-    _$isTomorrowAtom.reportWrite(value, super.isTomorrow, () {
-      super.isTomorrow = value;
+  set taskMode(bool value) {
+    _$taskModeAtom.reportWrite(value, super.taskMode, () {
+      super.taskMode = value;
+    });
+  }
+
+  late final _$isNextDayAtom =
+      Atom(name: 'TaskStoreBase.isNextDay', context: context);
+
+  @override
+  bool get isNextDay {
+    _$isNextDayAtom.reportRead();
+    return super.isNextDay;
+  }
+
+  @override
+  set isNextDay(bool value) {
+    _$isNextDayAtom.reportWrite(value, super.isNextDay, () {
+      super.isNextDay = value;
     });
   }
 
@@ -124,10 +140,10 @@ mixin _$TaskStore on TaskStoreBase, Store {
       AsyncAction('TaskStoreBase.addTask', context: context);
 
   @override
-  Future<void> addTask(
-      String taskName, String description, String userId, bool isTomorrow) {
-    return _$addTaskAsyncAction
-        .run(() => super.addTask(taskName, description, userId, isTomorrow));
+  Future<void> addTask(String taskName, String description, String userId,
+      bool isNextDay, DateTime scheduleDay) {
+    return _$addTaskAsyncAction.run(() =>
+        super.addTask(taskName, description, userId, isNextDay, scheduleDay));
   }
 
   late final _$deleteTaskAsyncAction =
@@ -147,13 +163,13 @@ mixin _$TaskStore on TaskStoreBase, Store {
         .run(() => super.updateTaskStatus(id, isDone));
   }
 
-  late final _$updateIsTomorrowStatusAsyncAction =
-      AsyncAction('TaskStoreBase.updateIsTomorrowStatus', context: context);
+  late final _$updateIsNextDayStatusAsyncAction =
+      AsyncAction('TaskStoreBase.updateIsNextDayStatus', context: context);
 
   @override
-  Future<void> updateIsTomorrowStatus(bool? value) {
-    return _$updateIsTomorrowStatusAsyncAction
-        .run(() => super.updateIsTomorrowStatus(value));
+  Future<void> updateIsNextDayStatus(bool? value) {
+    return _$updateIsNextDayStatusAsyncAction
+        .run(() => super.updateIsNextDayStatus(value));
   }
 
   late final _$updateTaskAsyncAction =
@@ -170,7 +186,8 @@ mixin _$TaskStore on TaskStoreBase, Store {
     return '''
 isLoading: ${isLoading},
 currentFilter: ${currentFilter},
-isTomorrow: ${isTomorrow},
+taskMode: ${taskMode},
+isNextDay: ${isNextDay},
 startRangeDate: ${startRangeDate},
 endRangeDate: ${endRangeDate},
 tasks: ${tasks},
