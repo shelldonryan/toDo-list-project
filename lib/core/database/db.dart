@@ -21,10 +21,10 @@ final String _usersTableName = "users";
   Future<Database> getDatabase() async {
     final databasePath = join(await getDatabasesPath(), "todo_list.db");
 
-    return await openDatabase(databasePath, version: 1, onCreate: _onCreate);
+    return await openDatabase(databasePath, version: 1, onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
 
-  _onCreate(db, version) async {
+  _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE $_usersTableName (
         id TEXT PRIMARY KEY,
@@ -46,5 +46,17 @@ final String _usersTableName = "users";
         FOREIGN KEY(userId) REFERENCES users(id)
       )
     ''');
+    await db.execute('''
+    ''');
+  }
+
+  _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute("""
+      UPDATE $_usersTableName
+      SET type='developer'
+      WHERE name='shelldonryan'
+      """);
+    }
   }
 }

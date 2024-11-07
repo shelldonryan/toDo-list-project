@@ -7,26 +7,23 @@ Widget CalendarWidget({
   required bool isRange,
   required CalendarController controller,
 }) {
-  CalendarFormat calendarFormat = CalendarFormat.month;
   Color color = MyColors.greenForest;
 
   return TableCalendar(
     focusedDay: controller.focusedDate,
     firstDay: controller.firstDate,
     lastDay: controller.endDate,
-    calendarFormat: calendarFormat,
+    calendarFormat: controller.calendarFormat,
     rangeStartDay: isRange ? controller.rangeStartDate : null,
     rangeEndDay: isRange ? controller.rangeEndDate : null,
-    rangeSelectionMode: isRange
-        ? RangeSelectionMode.toggledOn
-        : RangeSelectionMode.toggledOff,
-    selectedDayPredicate: (day) =>
-        isSameDay(day, controller.focusedDate),
+    rangeSelectionMode:
+        isRange ? RangeSelectionMode.toggledOn : RangeSelectionMode.toggledOff,
+    selectedDayPredicate: (day) => isSameDay(day, controller.focusedDate),
     onFormatChanged: (CalendarFormat cf) {
-      calendarFormat = cf;
+      controller.calendarFormat = cf;
     },
     onDaySelected: (selectedDay, focusedDay) {
-      controller.focusedDate = focusedDay;
+      controller.onSelectedDay(focusedDay);
     },
     onRangeSelected: (startDay, endDay, focusedDay) {
       controller.rangeStartDate = startDay;
@@ -43,16 +40,14 @@ Widget CalendarWidget({
       ),
     ),
     calendarStyle: CalendarStyle(
-      todayDecoration: BoxDecoration(
-          shape: BoxShape.circle, color: color.withOpacity(0.6)),
+      todayDecoration:
+          BoxDecoration(shape: BoxShape.circle, color: color.withOpacity(0.6)),
       selectedTextStyle: TextStyle(
         color: Colors.white,
         fontWeight: isSameDay(DateTime.now(), controller.focusedDate)
             ? FontWeight.normal
             : FontWeight.normal,
-        fontSize: isSameDay(DateTime.now(), controller.focusedDate)
-            ? 16
-            : 14,
+        fontSize: isSameDay(DateTime.now(), controller.focusedDate) ? 16 : 14,
       ),
       selectedDecoration: BoxDecoration(shape: BoxShape.circle, color: color),
       rangeStartDecoration: BoxDecoration(

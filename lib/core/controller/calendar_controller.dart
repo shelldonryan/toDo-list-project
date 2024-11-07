@@ -1,4 +1,5 @@
 import 'package:mobx/mobx.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 part 'calendar_controller.g.dart';
 
@@ -16,6 +17,9 @@ abstract class CalendarControllerBase with Store {
 
   @observable
   DateTime? rangeEndDate;
+
+  @observable
+  CalendarFormat calendarFormat = CalendarFormat.month;
 
   @action
   void onSelectedDay(DateTime focusedDay){

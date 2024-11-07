@@ -16,17 +16,32 @@ class ScheduleTaskPage extends StatefulWidget {
 }
 
 class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final CalendarController calendarController = CalendarController();
+  late final TextEditingController titleController;
+  late final TextEditingController descriptionController;
+  late final CalendarController calendarController;
   late TaskStore taskStore;
   late AuthStore authStore;
+
+  @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController();
+    descriptionController = TextEditingController();
+    calendarController = CalendarController();
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     taskStore = Provider.of<TaskStore>(context);
     authStore = Provider.of<AuthStore>(context);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    titleController.dispose();
+    descriptionController.dispose();
   }
 
   @override
@@ -44,20 +59,29 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
           child: Column(
             children: [
               CalendarWidget(isRange: false, controller: calendarController),
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(
-                  labelText: "Title Here",
-                  labelStyle: TextStyle(color: Colors.black54),
-                ),
-              ),
-              TextField(
-                controller: descriptionController,
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-                decoration: const InputDecoration(
-                  labelText: "Description here",
-                  labelStyle: TextStyle(color: Colors.black54),
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    TextField(
+                      autocorrect: true,
+                      controller: titleController,
+                      decoration: const InputDecoration(
+                        labelText: "Title Here",
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                    TextField(
+                      autocorrect: true,
+                      controller: descriptionController,
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      decoration: const InputDecoration(
+                        labelText: "Description here",
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(
@@ -70,7 +94,7 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
                           titleController.text,
                           descriptionController.text,
                           authStore.userId!, false,
-                          calendarController.focusedDate);
+                          calendarController.focusedDate.add(const Duration(hours: 4)));
                       titleController.clear();
                       descriptionController.clear();
                       Navigator.pop(context);

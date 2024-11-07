@@ -57,6 +57,22 @@ mixin _$CalendarController on CalendarControllerBase, Store {
     });
   }
 
+  late final _$calendarFormatAtom =
+      Atom(name: 'CalendarControllerBase.calendarFormat', context: context);
+
+  @override
+  CalendarFormat get calendarFormat {
+    _$calendarFormatAtom.reportRead();
+    return super.calendarFormat;
+  }
+
+  @override
+  set calendarFormat(CalendarFormat value) {
+    _$calendarFormatAtom.reportWrite(value, super.calendarFormat, () {
+      super.calendarFormat = value;
+    });
+  }
+
   late final _$CalendarControllerBaseActionController =
       ActionController(name: 'CalendarControllerBase', context: context);
 
@@ -88,7 +104,8 @@ mixin _$CalendarController on CalendarControllerBase, Store {
     return '''
 focusedDate: ${focusedDate},
 rangeStartDate: ${rangeStartDate},
-rangeEndDate: ${rangeEndDate}
+rangeEndDate: ${rangeEndDate},
+calendarFormat: ${calendarFormat}
     ''';
   }
 }

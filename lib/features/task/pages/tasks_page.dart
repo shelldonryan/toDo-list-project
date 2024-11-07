@@ -277,6 +277,13 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    titleController.dispose();
+    descriptionController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
