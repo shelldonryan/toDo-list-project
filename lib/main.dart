@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_list_project/core/firebase/auth_check.dart';
 import 'package:todo_list_project/core/services/tasks_service.dart';
@@ -18,7 +19,9 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   } catch (e) {
-    print("Error to initialize: $e");
+    if (kDebugMode) {
+      print("Error to initialize: $e");
+    }
   }
 
   runApp(MultiProvider(

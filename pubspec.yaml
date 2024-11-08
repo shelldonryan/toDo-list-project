@@ -46,6 +46,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.1
   http: ^1.2.2
   table_calendar: ^3.1.2
+  path: ^1.9.0
 
 flutter_icons:
   image_path: "assets/app/icon_ios.png"
