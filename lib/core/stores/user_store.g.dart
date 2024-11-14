@@ -114,6 +114,14 @@ mixin _$UserStore on UserStoreBase, Store {
     return _$getUserAccountAsyncAction.run(() => super.getUserAccount(uid));
   }
 
+  late final _$deleteUserAsyncAction =
+      AsyncAction('UserStoreBase.deleteUser', context: context);
+
+  @override
+  Future<void> deleteUser() {
+    return _$deleteUserAsyncAction.run(() => super.deleteUser());
+  }
+
   late final _$UserStoreBaseActionController =
       ActionController(name: 'UserStoreBase', context: context);
 

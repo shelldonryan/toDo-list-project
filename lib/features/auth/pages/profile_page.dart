@@ -218,6 +218,39 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                     ),
                   ),
+                  Card(
+                    elevation: 4,
+                    shadowColor: Colors.black12,
+                    child: ListTile(
+                      textColor: Colors.red,
+                      leading: const Icon(
+                        Icons.logout,
+                        color: Colors.red,
+                      ),
+                      title: const Text("Delete account"),
+                      trailing: const Icon(
+                        Icons.chevron_right,
+                        color: Colors.red,
+                      ),
+                      onTap: () {
+                        userStore.deleteUser();
+                        authStore.deleteAccount().then(
+                              (String? erro) {
+                            if (erro != null) {
+                              showErrorSnackBar(context: context, error: erro);
+                            }
+                          },
+                        );
+                        authStore.logout().then(
+                          (String? erro) {
+                            if (erro != null) {
+                              showErrorSnackBar(context: context, error: erro);
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -86,4 +86,13 @@ abstract class UserStoreBase with Store {
     username = user.name;
     userType = user.type;
   }
+
+  @action
+  Future<void> deleteUser() async {
+    try {
+      await _userService.deleteUser(_currentUid);
+    } catch (e) {
+      throw Exception("Falied to delte user: $e");
+    }
+  }
 }

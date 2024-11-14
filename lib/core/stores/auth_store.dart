@@ -86,4 +86,17 @@ abstract class AuthStoreBase with Store {
     }
     return null;
   }
+
+  @action
+  Future<String?> deleteAccount() async {
+    try {
+      isLoading = true;
+      await _firebaseUser?.delete();
+      isLoading = false;
+    } on FirebaseAuthException catch (e) {
+      isLoading = false;
+      return e.message;
+    }
+    return null;
+  }
 }

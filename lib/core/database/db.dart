@@ -1,4 +1,3 @@
-
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -22,7 +21,7 @@ class DatabaseService {
   Future<Database> getDatabase() async{
     var databasePath = await getDatabasesPath();
     final dbPath = join(databasePath, 'todo_list.db');
-    return await openDatabase(dbPath, version: 3, onCreate: _onCreate, onUpgrade: _onUpgrade);
+    return await openDatabase(dbPath, version: 1, onCreate: _onCreate);
   }
 
   Future <void> _onCreate(Database db, int version) async {
@@ -47,22 +46,5 @@ class DatabaseService {
         FOREIGN KEY(userId) REFERENCES users(id)
       )
     ''');
-  }
-
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if ( oldVersion < 2) {
-      await db.rawUpdate('''
-        UPDATE $_userTableName
-        SET type = 'developer'
-        WHERE name = 'joao2222' AND type = 'support'
-      ''');
-    }
-
-    if ( oldVersion < 3) {
-      await db.rawDelete('''
-        DELETE FROM $_userTableName
-        WHERE name = 'shelldonryan'
-      ''');
-    }
   }
 }

@@ -81,6 +81,14 @@ mixin _$AuthStore on AuthStoreBase, Store {
     return _$logoutAsyncAction.run(() => super.logout());
   }
 
+  late final _$deleteAccountAsyncAction =
+      AsyncAction('AuthStoreBase.deleteAccount', context: context);
+
+  @override
+  Future<String?> deleteAccount() {
+    return _$deleteAccountAsyncAction.run(() => super.deleteAccount());
+  }
+
   @override
   String toString() {
     return '''
