@@ -126,8 +126,8 @@ class _AuthPageState extends State<AuthPage> {
                                   validator: (String? value) {
                                     if (value!.isEmpty) {
                                       return 'This field is empty';
-                                    } else if (value.length < 6) {
-                                      return 'The username must be 6 letters';
+                                    } else if (value.length < 2) {
+                                      return 'The username must be 2 letters';
                                     }
                                     return null;
                                   },
