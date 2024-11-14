@@ -128,6 +128,22 @@ mixin _$TaskStore on TaskStoreBase, Store {
     });
   }
 
+  late final _$tasksSomeUserAtom =
+      Atom(name: 'TaskStoreBase.tasksSomeUser', context: context);
+
+  @override
+  ObservableList<Task> get tasksSomeUser {
+    _$tasksSomeUserAtom.reportRead();
+    return super.tasksSomeUser;
+  }
+
+  @override
+  set tasksSomeUser(ObservableList<Task> value) {
+    _$tasksSomeUserAtom.reportWrite(value, super.tasksSomeUser, () {
+      super.tasksSomeUser = value;
+    });
+  }
+
   late final _$loadTasksAsyncAction =
       AsyncAction('TaskStoreBase.loadTasks', context: context);
 
@@ -191,6 +207,7 @@ isNextDay: ${isNextDay},
 startRangeDate: ${startRangeDate},
 endRangeDate: ${endRangeDate},
 tasks: ${tasks},
+tasksSomeUser: ${tasksSomeUser},
 filteredTasks: ${filteredTasks}
     ''';
   }

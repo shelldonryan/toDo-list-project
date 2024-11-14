@@ -3,7 +3,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:todo_list_project/core/controller/calendar_controller.dart';
 import 'package:todo_list_project/shared/themes/my_colors.dart';
 
-Widget CalendarWidget({
+Widget calendarWidget({
   required bool isRange,
   required CalendarController controller,
 }) {

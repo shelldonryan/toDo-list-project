@@ -58,7 +58,7 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
         builder:(_) => SingleChildScrollView(
           child: Column(
             children: [
-              CalendarWidget(isRange: false, controller: calendarController),
+              calendarWidget(isRange: false, controller: calendarController),
               Container(
                 padding: const EdgeInsets.all(20),
                 child: Column(

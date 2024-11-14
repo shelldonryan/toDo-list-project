@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_list_project/core/controller/calendar_controller.dart';
 import 'package:todo_list_project/features/task/models/task.dart';
 import 'package:todo_list_project/shared/themes/my_colors.dart';
 import '../../../core/stores/tasks_store.dart';
+import '../../../core/utils/task_filter.dart';
 import '../../auth/models/user.dart';
 
 class AllTaskPage extends StatefulWidget {
   const AllTaskPage({
     super.key,
     required this.user,
+    required this.calendarController,
   });
 
   final Users user;
+  final CalendarController calendarController;
 
   @override
   State<AllTaskPage> createState() => _AllTaskPageState();
@@ -20,13 +24,15 @@ class AllTaskPage extends StatefulWidget {
 
 class _AllTaskPageState extends State<AllTaskPage>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  late final TabController _tabController;
+  late final TaskFilterController _filterController;
   late final TaskStore taskStore;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _filterController = TaskFilterController();
   }
 
   @override
@@ -72,30 +78,42 @@ class _AllTaskPageState extends State<AllTaskPage>
 
   @override
   Widget build(BuildContext context) {
-    final tasks = taskStore.tasks;
+    taskStore.loadSomeTasks(widget.user.id);
+
     return Observer(
-      builder:(_) => Scaffold(
-        appBar: AppBar(
-          title: Text("Tasks User ${widget.user.name}"),
-          backgroundColor: MyColors.greenForest,
-          foregroundColor: Theme.of(context).colorScheme.onPrimary,
-          bottom: TabBar(controller: _tabController, tabs: const <Widget>[
-            Tab(
-              text: "Pending",
-            ),
-            Tab(
-              text: "Finished",
-            ),
-          ]),
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            showListTasks(tasks.where((task) => task.isDone == false).toList()),
-            showListTasks(tasks.where((task) => task.isDone == true).toList()),
-          ],
-        ),
-      ),
+      builder: (_) {
+        final tasks = _filterController.filterTasks(
+            taskStore.tasksSomeUser.toList(), "custom",
+            startRangeDate:
+                widget.calendarController.rangeStartDate ?? DateTime.now(),
+            endRangeDate:
+                widget.calendarController.rangeEndDate ?? DateTime.now());
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("Tasks User ${widget.user.name}"),
+            backgroundColor: MyColors.greenForest,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+            bottom: TabBar(controller: _tabController, tabs: const <Widget>[
+              Tab(
+                text: "Pending",
+              ),
+              Tab(
+                text: "Finished",
+              ),
+            ]),
+          ),
+          body: TabBarView(
+            controller: _tabController,
+            children: [
+              showListTasks(
+                  tasks.where((task) => task.isDone == false).toList()),
+              showListTasks(
+                  tasks.where((task) => task.isDone == true).toList()),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:todo_list_project/core/services/tasks_service.dart';
 import 'package:uuid/uuid.dart';
@@ -31,6 +32,9 @@ abstract class TaskStoreBase with Store {
   @observable
   ObservableList<Task> tasks = ObservableList<Task>();
 
+  @observable
+  ObservableList<Task> tasksSomeUser = ObservableList<Task>();
+
   @computed
   List<Task> get filteredTasks => ObservableList<Task>.of(
       _filterController.filterTasks(tasks.toList(), currentFilter,
@@ -47,6 +51,21 @@ abstract class TaskStoreBase with Store {
       final tasksUser = allTasks.where((task) => task.userId == uid);
 
       tasks.addAll(tasksUser);
+    }
+
+    isLoading = false;
+  }
+
+  Future<void> loadSomeTasks(String uid) async {
+    isLoading = true;
+
+    final allTasks = await _taskService.getTasks();
+    tasksSomeUser.clear();
+
+    if (allTasks.isNotEmpty) {
+      final tasksUser = allTasks.where((task) => task.userId == uid);
+
+      tasksSomeUser.addAll(tasksUser);
     }
 
     isLoading = false;

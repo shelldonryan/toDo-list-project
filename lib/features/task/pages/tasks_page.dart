@@ -377,7 +377,7 @@ class _TaskPageState extends State<TaskPage> {
                                 SizedBox(
                                   width: double.maxFinite,
                                   height: 395,
-                                  child: CalendarWidget(
+                                  child: calendarWidget(
                                       isRange: true,
                                       controller: calendarController),
                                 ),

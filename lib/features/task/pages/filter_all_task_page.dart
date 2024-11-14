@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_list_project/core/controller/calendar_controller.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
 import 'package:todo_list_project/features/task/pages/all_task_page.dart';
+import 'package:todo_list_project/shared/utils/calendar_widget.dart';
 
 import '../../../shared/themes/my_colors.dart';
 import '../../auth/models/user.dart';
@@ -16,11 +18,13 @@ class FilterAllTaskPage extends StatefulWidget {
 
 class _FilterAllTaskPageState extends State<FilterAllTaskPage> {
   late final UserStore userStore;
+  late final CalendarController calendarController;
 
   @override
   void initState() {
     super.initState();
     userStore = Provider.of<UserStore>(context, listen: false);
+    calendarController = CalendarController();
   }
 
   @override
@@ -61,7 +65,7 @@ class _FilterAllTaskPageState extends State<FilterAllTaskPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AllTaskPage(user: user)));
+                              builder: (context) => AllTaskPage(user: user, calendarController: calendarController,)));
                     },
                   ),
                 );
@@ -70,7 +74,23 @@ class _FilterAllTaskPageState extends State<FilterAllTaskPage> {
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: "filter_button_page_all_tasks",
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: Observer(
+                builder: (_) => SingleChildScrollView(
+                  child: SizedBox(
+                    height: 395,
+                    width: double.maxFinite,
+                    child: calendarWidget(
+                        isRange: true, controller: calendarController),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
         backgroundColor: MyColors.greenForest,
         child: const Icon(Icons.filter_alt),
       ),
