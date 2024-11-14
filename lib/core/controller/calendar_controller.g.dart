@@ -100,6 +100,17 @@ mixin _$CalendarController on CalendarControllerBase, Store {
   }
 
   @override
+  void dispose() {
+    final _$actionInfo = _$CalendarControllerBaseActionController.startAction(
+        name: 'CalendarControllerBase.dispose');
+    try {
+      return super.dispose();
+    } finally {
+      _$CalendarControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 focusedDate: ${focusedDate},

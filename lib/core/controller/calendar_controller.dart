@@ -36,4 +36,11 @@ abstract class CalendarControllerBase with Store {
     rangeEndDate = endDay;
     focusedDay = focusedDay;
   }
+
+  @action
+  void dispose() {
+    focusedDate = DateTime.now();
+    rangeStartDate = null;
+    rangeEndDate = null;
+  }
 }

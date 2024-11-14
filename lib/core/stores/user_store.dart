@@ -64,6 +64,7 @@ abstract class UserStoreBase with Store {
 
     try {
       await _userService.updateUser (userToUpdate);
+      userList = await _userService.getUsers();
     } catch (e) {
       throw Exception('Failed to update user: $e');
     }

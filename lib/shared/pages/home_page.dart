@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list_project/features/task/pages/filter_all_task_page.dart';
 import 'package:todo_list_project/features/task/pages/tasks_page.dart';
 
 import '../../features/auth/pages/profile_page.dart';
@@ -33,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _getPages() {
     List<Widget> pages = [const TaskPage()];
     if(widget.isDeveloper) {
-      pages.add(const AllTaskPage());
+      pages.add(const FilterAllTaskPage());
     }
 
     pages.add(const ProfilePage());

@@ -235,6 +235,7 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     leading: Checkbox(
                         value: task.isDone,
+
                         onChanged: (bool? isDone) =>
                             taskStore.updateTaskStatus(task.id, isDone!)),
                     onLongPress: () {
@@ -257,7 +258,7 @@ class _TaskPageState extends State<TaskPage> {
     switch (item) {
       case 0:
         taskStore.taskMode = !taskStore.taskMode;
-       break;
+        break;
     }
   }
 
@@ -432,12 +433,15 @@ class _TaskPageState extends State<TaskPage> {
       }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Observer(
-        builder:(_) => FloatingActionButton.extended(
+        builder: (_) => FloatingActionButton.extended(
+          heroTag: "schedule_button_page_tasks",
           onPressed: () {
             taskStore.taskMode
                 ? _showTaskAlert(context, authStore.user!.uid)
-                : Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const ScheduleTaskPage()));
+                : Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ScheduleTaskPage()));
           },
           backgroundColor: MyColors.greenForest,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
