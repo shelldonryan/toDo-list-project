@@ -18,13 +18,13 @@ class DatabaseService {
     return _db!;
   }
 
-  Future<Database> getDatabase() async{
+  Future<Database> getDatabase() async {
     var databasePath = await getDatabasesPath();
     final dbPath = join(databasePath, 'todo_list.db');
     return await openDatabase(dbPath, version: 1, onCreate: _onCreate);
   }
 
-  Future <void> _onCreate(Database db, int version) async {
+  Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE $_userTableName (
         id TEXT PRIMARY KEY,

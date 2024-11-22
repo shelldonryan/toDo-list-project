@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
-import 'package:todo_list_project/core/services/tasks_service.dart';
+import 'package:todo_list_project/core/repository/tasks_repository.dart';
 import 'package:uuid/uuid.dart';
 import '../../features/task/models/task.dart';
 import '../utils/task_filter.dart';
@@ -10,11 +9,12 @@ part 'tasks_store.g.dart';
 class TaskStore = TaskStoreBase with _$TaskStore;
 
 abstract class TaskStoreBase with Store {
-  final TaskService _taskService;
+  final TasksRepository _tasksRepository;
   final TaskFilterController _filterController;
   final Uuid uuid = const Uuid();
 
-  TaskStoreBase(this._taskService) : _filterController = TaskFilterController();
+  TaskStoreBase(this._tasksRepository)
+      : _filterController = TaskFilterController();
 
   @observable
   bool isLoading = false;
@@ -44,7 +44,7 @@ abstract class TaskStoreBase with Store {
   Future<void> loadTasks(String uid) async {
     isLoading = true;
 
-    final allTasks = await _taskService.getTasks();
+    final allTasks = await _tasksRepository.getTasks();
     tasks.clear();
 
     if (allTasks.isNotEmpty) {
@@ -59,7 +59,7 @@ abstract class TaskStoreBase with Store {
   Future<void> loadSomeTasks(String uid) async {
     isLoading = true;
 
-    final allTasks = await _taskService.getTasks();
+    final allTasks = await _tasksRepository.getTasks();
     tasksSomeUser.clear();
 
     if (allTasks.isNotEmpty) {
@@ -81,7 +81,7 @@ abstract class TaskStoreBase with Store {
       time = time.add(const Duration(days: 1));
     }
 
-    await _taskService.addTask(id, taskName, time, description, userId);
+    await _tasksRepository.addTask(id, taskName, time, description, userId);
 
     tasks.add(Task(
         id: id,
@@ -94,14 +94,14 @@ abstract class TaskStoreBase with Store {
 
   @action
   Future<void> deleteTask(String id) async {
-    await _taskService.deleteTask(id);
+    await _tasksRepository.deleteTask(id);
 
     tasks.remove(tasks.firstWhere((task) => task.id == id));
   }
 
   @action
   Future<void> updateTaskStatus(String id, bool isDone) async {
-    await _taskService.updateTaskStatus(id, isDone);
+    await _tasksRepository.updateTaskStatus(id, isDone);
 
     isLoading = true;
 
@@ -123,7 +123,7 @@ abstract class TaskStoreBase with Store {
   @action
   Future<void> updateTask(
       String id, String taskName, String taskDescription) async {
-    await _taskService.updateTask(id, taskName, taskDescription);
+    await _tasksRepository.updateTask(id, taskName, taskDescription);
 
     isLoading = true;
 

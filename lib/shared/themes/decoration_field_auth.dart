@@ -20,11 +20,9 @@ InputDecoration getAuthInputDecoration(String label) {
     ),
     errorBorder: const OutlineInputBorder(
         borderRadius: BorderRadius.horizontal(),
-        borderSide: BorderSide(color: Colors.amber, width: 1)
-    ),
+        borderSide: BorderSide(color: Colors.amber, width: 1)),
     focusedErrorBorder: const OutlineInputBorder(
         borderRadius: BorderRadius.horizontal(),
-        borderSide: BorderSide(color: Colors.amber, width: 1.5)
-    ),
+        borderSide: BorderSide(color: Colors.amber, width: 1.5)),
   );
 }

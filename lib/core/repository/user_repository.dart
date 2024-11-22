@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:todo_list_project/features/auth/models/user.dart';
 import '../database/db.dart';
 
-class UserService {
+class UserRepository {
   final String _usersTableName = "users";
   final DatabaseService dbService = DatabaseService.instance;
 
@@ -52,13 +52,17 @@ class UserService {
   Future<void> updateUser(Users user) async {
     final db = await database;
 
-    await db.update(_usersTableName, {
-      "name": user.name,
-      "email": user.email ,
-      "password": user.password ,
-      "token": user.token ,
-      "type": user.type ,
-    }, where: "id = ?", whereArgs: [user.id]);
+    await db.update(
+        _usersTableName,
+        {
+          "name": user.name,
+          "email": user.email,
+          "password": user.password,
+          "token": user.token,
+          "type": user.type,
+        },
+        where: "id = ?",
+        whereArgs: [user.id]);
   }
 
   Future<void> addUser(Users user) async {

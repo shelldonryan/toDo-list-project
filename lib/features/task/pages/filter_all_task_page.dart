@@ -65,7 +65,10 @@ class _FilterAllTaskPageState extends State<FilterAllTaskPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AllTaskPage(user: user, calendarController: calendarController,)));
+                              builder: (context) => AllTaskPage(
+                                    user: user,
+                                    calendarController: calendarController,
+                                  )));
                     },
                   ),
                 );

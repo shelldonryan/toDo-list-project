@@ -18,12 +18,29 @@ class _AuthCheckState extends State<AuthCheck> {
   Widget build(BuildContext context) {
     final authStore = Provider.of<AuthStore>(context);
     final userStore = Provider.of<UserStore>(context);
-    return Observer(builder:(_) {
-      if (authStore.userIsAuth) {
-        bool isDeveloper = userStore.userType == "developer" ? true : false;
-        return HomePage(isDeveloper: isDeveloper);
+
+    return Observer(builder: (_) {
+      if (!authStore.userIsAuth) {
+        return const AuthPage();
       }
-      return const AuthPage();
+
+      return FutureBuilder(
+        future: userStore.getUserAccount(authStore.userId!),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          } else if (snapshot.hasError) {
+            return const Scaffold(
+              body: Center(child: Text('Error to load data from user')),
+            );
+          } else {
+            bool isDeveloper = userStore.userType == "developer";
+            return HomePage(isDeveloper: isDeveloper);
+          }
+        },
+      );
     });
   }
 }

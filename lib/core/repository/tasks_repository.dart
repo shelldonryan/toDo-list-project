@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:todo_list_project/core/database/db.dart';
 import 'package:todo_list_project/features/task/models/task.dart';
 
-class TaskService {
+class TasksRepository {
   final String _tasksTableName = "tasks";
   final DatabaseService dbService = DatabaseService.instance;
 

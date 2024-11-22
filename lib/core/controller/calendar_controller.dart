@@ -22,7 +22,7 @@ abstract class CalendarControllerBase with Store {
   CalendarFormat calendarFormat = CalendarFormat.month;
 
   @action
-  void onSelectedDay(DateTime focusedDay){
+  void onSelectedDay(DateTime focusedDay) {
     if (focusedDate == focusedDay) {
       focusedDate = DateTime.now();
     } else {
@@ -31,7 +31,8 @@ abstract class CalendarControllerBase with Store {
   }
 
   @action
-  void onRangeSelected(DateTime? startDay, DateTime? endDay, DateTime? focusedDay) {
+  void onRangeSelected(
+      DateTime? startDay, DateTime? endDay, DateTime? focusedDay) {
     rangeStartDate = startDay;
     rangeEndDate = endDay;
     focusedDay = focusedDay;
