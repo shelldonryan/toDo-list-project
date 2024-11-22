@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_list_project/core/firebase/auth_check.dart';
-import 'package:todo_list_project/core/services/tasks_service.dart';
-import 'package:todo_list_project/core/services/user_service.dart';
+import 'package:todo_list_project/core/repository/tasks_repository.dart';
+import 'package:todo_list_project/core/repository/user_repository.dart';
+import 'package:todo_list_project/features/auth/pages/auth_check.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';
@@ -26,11 +26,19 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
-      Provider(create: (context) => TaskService(),),
-      Provider(create: (context) => UserService(),),
+      Provider(
+        create: (context) => TasksRepository(),
+      ),
+      Provider(
+        create: (context) => UserRepository(),
+      ),
       Provider(create: (context) => AuthStore()),
-      Provider(create: (context) => TaskStore(Provider.of<TaskService>(context, listen: false))),
-      Provider(create: (context) => UserStore(Provider.of<UserService>(context, listen: false))),
+      Provider(
+          create: (context) =>
+              TaskStore(Provider.of<TasksRepository>(context, listen: false))),
+      Provider(
+          create: (context) =>
+              UserStore(Provider.of<UserRepository>(context, listen: false))),
     ],
     child: const MyApp(),
   ));

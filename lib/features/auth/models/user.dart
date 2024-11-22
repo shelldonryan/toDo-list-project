@@ -39,7 +39,8 @@ class Users {
     };
   }
 
-  factory Users.fromJson(String jsonString) => Users.fromMap(json.decode(jsonString));
+  factory Users.fromJson(String jsonString) =>
+      Users.fromMap(json.decode(jsonString));
 
   String toJson() => json.encode(toMap());
 }

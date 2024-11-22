@@ -18,6 +18,7 @@ abstract class AuthStoreBase with Store {
   bool isLoading = false;
 
   AuthStoreBase() {
+    // Ouvindo mudanças no estado de autenticação
     _firebaseAuth.authStateChanges().listen((User? user) {
       if (user != null) {
         _firebaseUser = _firebaseAuth.currentUser;
@@ -40,10 +41,8 @@ abstract class AuthStoreBase with Store {
 
     try {
       isLoading = true;
-
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
-
       isLoading = false;
     } on FirebaseAuthException catch (e) {
       isLoading = false;
@@ -60,10 +59,8 @@ abstract class AuthStoreBase with Store {
 
     try {
       isLoading = true;
-
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-
       isLoading = false;
     } on FirebaseAuthException catch (e) {
       isLoading = false;
@@ -76,9 +73,7 @@ abstract class AuthStoreBase with Store {
   Future<String?> logout() async {
     try {
       isLoading = true;
-
       await _firebaseAuth.signOut();
-
       isLoading = false;
     } on FirebaseAuthException catch (e) {
       isLoading = false;
@@ -89,6 +84,10 @@ abstract class AuthStoreBase with Store {
 
   @action
   Future<String?> deleteAccount() async {
+    if (_firebaseUser == null) {
+      return 'No user is currently logged in.';
+    }
+
     try {
       isLoading = true;
       await _firebaseUser?.delete();

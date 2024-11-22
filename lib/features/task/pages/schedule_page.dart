@@ -52,10 +52,9 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
         title: const Text("Schedule Task"),
         backgroundColor: MyColors.greenForest,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-
       ),
       body: Observer(
-        builder:(_) => SingleChildScrollView(
+        builder: (_) => SingleChildScrollView(
           child: Column(
             children: [
               calendarWidget(isRange: false, controller: calendarController),
@@ -93,15 +92,22 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
                       taskStore.addTask(
                           titleController.text,
                           descriptionController.text,
-                          authStore.userId!, false,
-                          calendarController.focusedDate.add(const Duration(hours: 4)));
+                          authStore.userId!,
+                          false,
+                          calendarController.focusedDate
+                              .add(const Duration(hours: 4)));
                       titleController.clear();
                       descriptionController.clear();
                       Navigator.pop(context);
                     } else {
-                      showErrorSnackBar(context: context, error: "Write a title for your task");
+                      showErrorSnackBar(
+                          context: context,
+                          error: "Write a title for your task");
                     }
                   },
+                  style: const ButtonStyle(
+                      backgroundColor:
+                          WidgetStatePropertyAll(MyColors.greenForest)),
                   child: const Icon(Icons.check)),
             ],
           ),

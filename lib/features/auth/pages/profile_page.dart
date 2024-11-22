@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_list_project/core/database/db.dart';
+import 'package:todo_list_project/core/repository/role_repository.dart';
+import 'package:todo_list_project/core/repository/user_repository.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
@@ -54,11 +57,6 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 children: [
-                  // const CircleAvatar(
-                  //   radius: 50,
-                  //   backgroundImage: NetworkImage(
-                  //       "https://images.unsplash.com/photo-1727638786395-6df4fc4a2048?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw4fHx8ZW58MHx8fHx8"),
-                  // ),
                   Text(
                     userStore.username,
                     style: const TextStyle(
@@ -103,7 +101,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               trailing: Text(
-                taskStore.filteredTasks.where((task) => !task.isDone).length.toString(),
+                taskStore.filteredTasks
+                    .where((task) => !task.isDone)
+                    .length
+                    .toString(),
                 style: const TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w500,
@@ -122,7 +123,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               trailing: Text(
-                taskStore.filteredTasks.where((task) => task.isDone).length.toString(),
+                taskStore.filteredTasks
+                    .where((task) => task.isDone)
+                    .length
+                    .toString(),
                 style: const TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w500,
@@ -209,9 +213,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       onTap: () {
                         authStore.logout().then(
-                          (String? erro) {
-                            if (erro != null) {
-                              showErrorSnackBar(context: context, error: erro);
+                          (String? errorMessage) {
+                            if (errorMessage != null) {
+                              showErrorSnackBar(
+                                  context: context, error: errorMessage);
                             }
                           },
                         );
@@ -233,18 +238,22 @@ class _ProfilePageState extends State<ProfilePage> {
                         color: Colors.red,
                       ),
                       onTap: () {
-                        userStore.deleteUser();
+                        final uid = authStore.userId;
                         authStore.deleteAccount().then(
-                              (String? erro) {
-                            if (erro != null) {
-                              showErrorSnackBar(context: context, error: erro);
+                          (String? errorMessage) async {
+                            await RoleRepository().delete(uid!);
+                            userStore.deleteUser();
+                            if (errorMessage != null) {
+                              showErrorSnackBar(
+                                  context: context, error: errorMessage);
                             }
                           },
                         );
                         authStore.logout().then(
-                          (String? erro) {
-                            if (erro != null) {
-                              showErrorSnackBar(context: context, error: erro);
+                          (String? errorMessage) {
+                            if (errorMessage != null) {
+                              showErrorSnackBar(
+                                  context: context, error: errorMessage);
                             }
                           },
                         );

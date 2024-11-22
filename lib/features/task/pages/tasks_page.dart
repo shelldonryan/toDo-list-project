@@ -235,7 +235,6 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     leading: Checkbox(
                         value: task.isDone,
-
                         onChanged: (bool? isDone) =>
                             taskStore.updateTaskStatus(task.id, isDone!)),
                     onLongPress: () {
@@ -391,6 +390,9 @@ class _TaskPageState extends State<TaskPage> {
                                       taskStore.loadTasks(authStore.userId!);
                                       Navigator.pop(context);
                                     },
+                                    style: const ButtonStyle(
+                                        backgroundColor: WidgetStatePropertyAll(
+                                            MyColors.greenForest)),
                                     child: const Icon(Icons.search))
                               ],
                             ),

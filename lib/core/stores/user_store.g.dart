@@ -56,19 +56,19 @@ mixin _$UserStore on UserStoreBase, Store {
     });
   }
 
-  late final _$_currentUidAtom =
-      Atom(name: 'UserStoreBase._currentUid', context: context);
+  late final _$currentUidAtom =
+      Atom(name: 'UserStoreBase.currentUid', context: context);
 
   @override
-  String get _currentUid {
-    _$_currentUidAtom.reportRead();
-    return super._currentUid;
+  String get currentUid {
+    _$currentUidAtom.reportRead();
+    return super.currentUid;
   }
 
   @override
-  set _currentUid(String value) {
-    _$_currentUidAtom.reportWrite(value, super._currentUid, () {
-      super._currentUid = value;
+  set currentUid(String value) {
+    _$currentUidAtom.reportWrite(value, super.currentUid, () {
+      super.currentUid = value;
     });
   }
 
@@ -93,9 +93,9 @@ mixin _$UserStore on UserStoreBase, Store {
 
   @override
   Future<void> createUser(
-      String uid, String name, String email, String password) {
+      String uid, String name, String email, String password, String type) {
     return _$createUserAsyncAction
-        .run(() => super.createUser(uid, name, email, password));
+        .run(() => super.createUser(uid, name, email, password, type));
   }
 
   late final _$updateTypeAsyncAction =
@@ -106,20 +106,20 @@ mixin _$UserStore on UserStoreBase, Store {
     return _$updateTypeAsyncAction.run(() => super.updateType(uid, type));
   }
 
-  late final _$getUserAccountAsyncAction =
-      AsyncAction('UserStoreBase.getUserAccount', context: context);
-
-  @override
-  Future<void> getUserAccount(String uid) {
-    return _$getUserAccountAsyncAction.run(() => super.getUserAccount(uid));
-  }
-
   late final _$deleteUserAsyncAction =
       AsyncAction('UserStoreBase.deleteUser', context: context);
 
   @override
   Future<void> deleteUser() {
     return _$deleteUserAsyncAction.run(() => super.deleteUser());
+  }
+
+  late final _$getUserAccountAsyncAction =
+      AsyncAction('UserStoreBase.getUserAccount', context: context);
+
+  @override
+  Future<void> getUserAccount(String uid) {
+    return _$getUserAccountAsyncAction.run(() => super.getUserAccount(uid));
   }
 
   late final _$UserStoreBaseActionController =
@@ -141,6 +141,7 @@ mixin _$UserStore on UserStoreBase, Store {
     return '''
 username: ${username},
 userType: ${userType},
+currentUid: ${currentUid},
 userList: ${userList},
 supportUsers: ${supportUsers},
 developerUsers: ${developerUsers}

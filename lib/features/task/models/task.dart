@@ -8,7 +8,13 @@ class Task {
   final String userId;
   bool isDone;
 
-  Task({required this.id, required this.createdAt, required this.taskName, required this.isDone, required this.description, required this.userId});
+  Task(
+      {required this.id,
+      required this.createdAt,
+      required this.taskName,
+      required this.isDone,
+      required this.description,
+      required this.userId});
 
   factory Task.fromMap(Map<String, dynamic> map) {
     return Task(
@@ -22,15 +28,16 @@ class Task {
   }
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    "createdAt": createdAt.millisecondsSinceEpoch,
-    'taskName': taskName,
-    'isDone': isDone,
-    'description': description,
-    'userId': userId,
-  };
+        'id': id,
+        "createdAt": createdAt.millisecondsSinceEpoch,
+        'taskName': taskName,
+        'isDone': isDone,
+        'description': description,
+        'userId': userId,
+      };
 
-  factory Task.fromJson(String jsonString) => Task.fromMap(json.decode(jsonString));
+  factory Task.fromJson(String jsonString) =>
+      Task.fromMap(json.decode(jsonString));
 
   String toJson() => json.encode(toMap());
 }

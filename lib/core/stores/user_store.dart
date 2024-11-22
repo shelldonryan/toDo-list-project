@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
-import 'package:todo_list_project/core/services/user_service.dart';
+import 'package:todo_list_project/core/repository/role_repository.dart';
+import 'package:todo_list_project/core/repository/user_repository.dart';
 import 'package:todo_list_project/features/auth/models/user.dart';
 
 part 'user_store.g.dart';
@@ -7,7 +9,7 @@ part 'user_store.g.dart';
 class UserStore = UserStoreBase with _$UserStore;
 
 abstract class UserStoreBase with Store {
-  late UserService _userService;
+  late UserRepository _userRepository;
   late Users user;
 
   @observable
@@ -17,7 +19,7 @@ abstract class UserStoreBase with Store {
   String userType = "";
 
   @observable
-  String _currentUid = "";
+  String currentUid = "";
 
   @observable
   List<Users> userList = [];
@@ -29,23 +31,30 @@ abstract class UserStoreBase with Store {
 
   @computed
   List<Users> get developerUsers {
-    return List<Users>.of(userList.where((user) => user.type == "developer" && user.id != _currentUid));
+    return List<Users>.of(userList
+        .where((user) => user.type == "developer" && user.id != currentUid));
   }
 
-
-  UserStoreBase(UserService userService) {
-    _userService = userService;
+  UserStoreBase(UserRepository userService) {
+    _userRepository = userService;
   }
 
   @action
-  Future<void> createUser(String uid, String name, String email, String password) async {
+  Future<void> createUser(String uid, String name, String email,
+      String password, String type) async {
     if (uid.isEmpty || name.isEmpty || email.isEmpty || password.isEmpty) {
       throw Exception('Invalid Parameters');
     }
 
-    Users user = Users(id: uid, name: name, email: email, password: password, type: "support", token: "");
-    await _userService.addUser(user);
-    userList.add(user);
+    Users newUser = Users(
+        id: uid,
+        name: name,
+        email: email,
+        password: password,
+        type: type,
+        token: "");
+    await _userRepository.addUser(newUser);
+    userList.add(newUser);
   }
 
   @action
@@ -63,10 +72,42 @@ abstract class UserStoreBase with Store {
     userToUpdate.type = type;
 
     try {
-      await _userService.updateUser (userToUpdate);
-      userList = await _userService.getUsers();
+      await _userRepository.updateUser(userToUpdate);
+      userList = await _userRepository.getUsers();
     } catch (e) {
       throw Exception('Failed to update user: $e');
+    }
+  }
+
+  @action
+  Future<void> deleteUser() async {
+    try {
+      await _userRepository.deleteUser(currentUid);
+      userList = await _userRepository
+          .getUsers(); // Atualiza a lista após excluir o usuário
+    } catch (e) {
+      throw Exception("Failed to delete user: $e");
+    }
+  }
+
+  @action
+  Future<void> getUserAccount(String uid) async {
+    try {
+      user = await _userRepository.getUser(uid);
+      userList = await _userRepository.getUsers();
+
+      currentUid = uid;
+      username = user.name;
+
+      final data = await RoleRepository().getByUser(uid);
+
+      if (data != "support" && data != "developer") {
+        throw Exception("User does not have a valid role");
+      }
+
+      userType = data;
+    } catch (e) {
+      throw Exception("Failed to get user account: $e");
     }
   }
 
@@ -74,25 +115,6 @@ abstract class UserStoreBase with Store {
   void cleanData() {
     username = "";
     userType = "";
-    _currentUid = "";
-  }
-
-  @action
-  Future<void> getUserAccount(String uid) async {
-    user = await _userService.getUser(uid);
-    userList = await _userService.getUsers();
-
-    _currentUid = uid;
-    username = user.name;
-    userType = user.type;
-  }
-
-  @action
-  Future<void> deleteUser() async {
-    try {
-      await _userService.deleteUser(_currentUid);
-    } catch (e) {
-      throw Exception("Falied to delte user: $e");
-    }
+    currentUid = "";
   }
 }
