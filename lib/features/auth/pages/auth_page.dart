@@ -59,14 +59,16 @@ class _AuthPageState extends State<AuthPage> {
                           _buildEmailField(),
                           const SizedBox(height: 8),
                           _buildPasswordField(),
+                          if (isSignUp) const SizedBox(height: 8),
                           if (isSignUp) _buildConfirmPasswordField(),
+                          if (isSignUp) const SizedBox(height: 8),
                           if (isSignUp) _buildUsernameField(),
                           const SizedBox(height: 24),
                           ElevatedButton(
                             onPressed: _handleAuth,
                             style: const ButtonStyle(
                                 backgroundColor: WidgetStatePropertyAll(
-                                    MyColors.greenForest)),
+                                    MyColors.greenForest), foregroundColor: WidgetStatePropertyAll(Colors.white)),
                             child: Text(isSignUp ? "Sign-up" : "Sign-in"),
                           ),
                           TextButton(

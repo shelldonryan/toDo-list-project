@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_list_project/core/database/db.dart';
 import 'package:todo_list_project/core/repository/role_repository.dart';
-import 'package:todo_list_project/core/repository/user_repository.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
@@ -46,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: MyColors.greenForest,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        foregroundColor: Colors.white,
         title: const Text("Profile"),
       ),
       body: Observer(
@@ -60,7 +58,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   Text(
                     userStore.username,
                     style: const TextStyle(
-                      color: Colors.black54,
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
                     ),
@@ -71,7 +68,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   Text(
                     userStore.userType,
                     style: const TextStyle(
-                      color: Colors.black54,
                       fontWeight: FontWeight.w200,
                       fontSize: 14,
                     ),
@@ -85,7 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Text(
               "${taskStore.currentFilter.toString().capitalize()} Tasks",
               style: const TextStyle(
-                  color: Colors.black54,
+                  
                   fontSize: 16,
                   fontWeight: FontWeight.w500),
             ),
@@ -95,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
               title: const Text(
                 "Pending Tasks",
                 style: TextStyle(
-                  color: Colors.black54,
+                  
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
                 ),
@@ -106,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     .length
                     .toString(),
                 style: const TextStyle(
-                  color: Colors.black54,
+                  
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
                 ),
@@ -117,7 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
               title: const Text(
                 "Finished Tasks",
                 style: TextStyle(
-                  color: Colors.black54,
+                  
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
                 ),
@@ -128,7 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     .length
                     .toString(),
                 style: const TextStyle(
-                  color: Colors.black54,
+                  
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
                 ),
@@ -139,7 +135,6 @@ class _ProfilePageState extends State<ProfilePage> {
               title: const Text(
                 "Total Tasks",
                 style: TextStyle(
-                  color: Colors.black54,
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
                 ),
@@ -147,7 +142,6 @@ class _ProfilePageState extends State<ProfilePage> {
               trailing: Text(
                 taskStore.filteredTasks.length.toString(),
                 style: const TextStyle(
-                  color: Colors.black54,
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
                 ),
@@ -167,7 +161,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         elevation: 4,
                         shadowColor: Colors.black12,
                         child: ListTile(
-                          textColor: Colors.black54,
                           leading: const Icon(Icons.transform),
                           title: const Text("Make user Developer"),
                           trailing: const Icon(Icons.chevron_right),
@@ -185,7 +178,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         elevation: 4,
                         shadowColor: Colors.black12,
                         child: ListTile(
-                          textColor: Colors.black54,
                           leading: const Icon(Icons.transform),
                           title: const Text("Make user support"),
                           trailing: const Icon(Icons.chevron_right),
@@ -259,7 +251,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         );
                       },
                     ),
-                  ),
+                  )
                 ],
               ),
             ),

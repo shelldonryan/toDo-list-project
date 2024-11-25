@@ -36,7 +36,6 @@ Widget calendarWidget({
       titleTextStyle: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
-        color: Colors.black87,
       ),
     ),
     calendarStyle: CalendarStyle(

@@ -51,7 +51,7 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
         centerTitle: true,
         title: const Text("Schedule Task"),
         backgroundColor: MyColors.greenForest,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        foregroundColor: Colors.white,
       ),
       body: Observer(
         builder: (_) => SingleChildScrollView(
@@ -67,7 +67,6 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
                       controller: titleController,
                       decoration: const InputDecoration(
                         labelText: "Title Here",
-                        labelStyle: TextStyle(color: Colors.black54),
                       ),
                     ),
                     TextField(
@@ -77,7 +76,6 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
                       keyboardType: TextInputType.multiline,
                       decoration: const InputDecoration(
                         labelText: "Description here",
-                        labelStyle: TextStyle(color: Colors.black54),
                       ),
                     ),
                   ],
@@ -105,9 +103,6 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
                           error: "Write a title for your task");
                     }
                   },
-                  style: const ButtonStyle(
-                      backgroundColor:
-                          WidgetStatePropertyAll(MyColors.greenForest)),
                   child: const Icon(Icons.check)),
             ],
           ),

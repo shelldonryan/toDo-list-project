@@ -93,10 +93,11 @@ class _AllTaskPageState extends State<AllTaskPage>
           appBar: AppBar(
             title: Text("Tasks User ${widget.user.name}"),
             backgroundColor: MyColors.greenForest,
-            foregroundColor: Theme.of(context).colorScheme.onPrimary,
-            bottom: TabBar(controller: _tabController, tabs: const <Widget>[
+            foregroundColor: Colors.white,
+            bottom: TabBar(controller: _tabController, indicatorColor: MyColors.greenForest, labelColor: Colors.white, tabs: const <Widget>[
               Tab(
                 text: "Pending",
+
               ),
               Tab(
                 text: "Finished",

@@ -47,7 +47,7 @@ class _FilterAllTaskPageState extends State<FilterAllTaskPage> {
         title: const Text("All Tasks"),
         centerTitle: true,
         backgroundColor: MyColors.greenForest,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        foregroundColor: Colors.white,
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
@@ -95,7 +95,7 @@ class _FilterAllTaskPageState extends State<FilterAllTaskPage> {
           );
         },
         backgroundColor: MyColors.greenForest,
-        child: const Icon(Icons.filter_alt),
+        child: const Icon(Icons.filter_alt_rounded, color: Colors.white),
       ),
     );
   }

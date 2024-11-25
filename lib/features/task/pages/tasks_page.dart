@@ -289,7 +289,7 @@ class _TaskPageState extends State<TaskPage> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: MyColors.greenForest,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        foregroundColor: Colors.white,
         title: const Text("Task List"),
         actions: [
           PopupMenuButton<int>(
@@ -390,9 +390,6 @@ class _TaskPageState extends State<TaskPage> {
                                       taskStore.loadTasks(authStore.userId!);
                                       Navigator.pop(context);
                                     },
-                                    style: const ButtonStyle(
-                                        backgroundColor: WidgetStatePropertyAll(
-                                            MyColors.greenForest)),
                                     child: const Icon(Icons.search))
                               ],
                             ),
@@ -446,7 +443,7 @@ class _TaskPageState extends State<TaskPage> {
                         builder: (context) => const ScheduleTaskPage()));
           },
           backgroundColor: MyColors.greenForest,
-          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          foregroundColor: Colors.white,
           icon: const Icon(Icons.task_alt),
           label: Text(
             taskStore.taskMode ? "Add Task" : "Schedule Task",

@@ -79,6 +79,7 @@ class _HomePageState extends State<HomePage> {
         data: GetNavigationBarTheme(),
         child: NavigationBar(
           selectedIndex: currentPage,
+          indicatorColor: Colors.transparent,
           onDestinationSelected: (page) {
             setState(() {
               currentPage = page;
