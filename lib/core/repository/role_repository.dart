@@ -44,7 +44,7 @@ class RoleRepository {
     try {
       await dbFirestore.collection('roles').doc(uid).delete();
     } catch (e) {
-      throw new Exception("Error: $e : $uid");
+      throw Exception("Error: $e : $uid");
     }
   }
 }

@@ -43,12 +43,12 @@ class _HomePageState extends State<HomePage> {
   List<NavigationDestination> _getNavigationDestinations() {
     List<NavigationDestination> destinations = [
       NavigationDestination(
-          icon: Icon(Icons.task_outlined),
-          selectedIcon: Icon(Icons.task),
+          icon: const Icon(Icons.task_outlined),
+          selectedIcon: const Icon(Icons.task),
           label: AppLocalizations.of(context)!.taskNavigationBar),
       NavigationDestination(
-          icon: Icon(Icons.person_outline),
-          selectedIcon: Icon(Icons.person),
+          icon: const Icon(Icons.person_outline),
+          selectedIcon: const Icon(Icons.person),
           label: AppLocalizations.of(context)!.profileNavigationBar),
     ];
 
@@ -56,8 +56,8 @@ class _HomePageState extends State<HomePage> {
       destinations.insert(
         1,
         NavigationDestination(
-          icon: Icon(Icons.groups_2_outlined),
-          selectedIcon: Icon(Icons.groups_2),
+          icon: const Icon(Icons.groups_2_outlined),
+          selectedIcon: const Icon(Icons.groups_2),
           label: AppLocalizations.of(context)!.allTaskNavigationBar,
         ),
       );
