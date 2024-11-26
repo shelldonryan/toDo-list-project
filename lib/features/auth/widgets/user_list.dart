@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../shared/utils/show_snack_bar.dart';
 import '../models/user.dart';
 
@@ -13,7 +13,7 @@ userList(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Choose a user"),
+          title: Text(AppLocalizations.of(context)!.alertTitleUserList),
           content: SizedBox(
             height: (50.0 * users.length),
             width: double.maxFinite,
@@ -29,7 +29,8 @@ userList(
                     Navigator.pop(context);
                     showSnackBar(
                         context: context,
-                        message: "User updated to ${user.type}");
+                        message:
+                            "${AppLocalizations.of(context)!.snackBarUpdateUserMsg} ${futureType == "developer" ? AppLocalizations.of(context)!.developerRole : AppLocalizations.of(context)!.supportRole}");
                   },
                 );
               },

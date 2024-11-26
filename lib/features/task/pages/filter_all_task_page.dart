@@ -5,7 +5,7 @@ import 'package:todo_list_project/core/controller/calendar_controller.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
 import 'package:todo_list_project/features/task/pages/all_task_page.dart';
 import 'package:todo_list_project/shared/utils/calendar_widget.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../shared/themes/my_colors.dart';
 import '../../auth/models/user.dart';
 
@@ -34,17 +34,17 @@ class _FilterAllTaskPageState extends State<FilterAllTaskPage> {
     if (systemUsers.isEmpty) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Nenhum Usuário'),
+          title: Text(AppLocalizations.of(context)!.appBarTitleDontHaveUser),
         ),
-        body: const Center(
-          child: Text('Não há usuários disponíveis'),
+        body: Center(
+          child: Text(AppLocalizations.of(context)!.contentDontHaveUser),
         ),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("All Tasks"),
+        title: Text(AppLocalizations.of(context)!.appBarTitleFilterAllTask),
         centerTitle: true,
         backgroundColor: MyColors.greenForest,
         foregroundColor: Colors.white,

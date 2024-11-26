@@ -7,6 +7,7 @@ import 'package:todo_list_project/shared/themes/my_colors.dart';
 import '../../../core/stores/tasks_store.dart';
 import '../../../core/utils/task_filter.dart';
 import '../../auth/models/user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AllTaskPage extends StatefulWidget {
   const AllTaskPage({
@@ -91,16 +92,16 @@ class _AllTaskPageState extends State<AllTaskPage>
 
         return Scaffold(
           appBar: AppBar(
-            title: Text("Tasks User ${widget.user.name}"),
+            title: Text(AppLocalizations.of(context)!.userTaskLabel + widget.user.name.toString()),
             backgroundColor: MyColors.greenForest,
             foregroundColor: Colors.white,
-            bottom: TabBar(controller: _tabController, indicatorColor: MyColors.greenForest, labelColor: Colors.white, tabs: const <Widget>[
+            bottom: TabBar(controller: _tabController, indicatorColor: MyColors.greenForest, labelColor: Colors.white, tabs: <Widget>[
               Tab(
-                text: "Pending",
+                text: AppLocalizations.of(context)!.pendingTaskLabel,
 
               ),
               Tab(
-                text: "Finished",
+                text: AppLocalizations.of(context)!.finishedTaskLabel,
               ),
             ]),
           ),

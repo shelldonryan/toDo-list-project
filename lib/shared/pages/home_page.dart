@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_project/core/stores/user_store.dart';
 import 'package:todo_list_project/features/task/pages/filter_all_task_page.dart';
 import 'package:todo_list_project/features/task/pages/tasks_page.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../features/auth/pages/profile_page.dart';
-import '../../features/task/pages/all_task_page.dart';
 import '../themes/navigation_bar_theme.dart';
 
 class HomePage extends StatefulWidget {
@@ -44,23 +42,23 @@ class _HomePageState extends State<HomePage> {
 
   List<NavigationDestination> _getNavigationDestinations() {
     List<NavigationDestination> destinations = [
-      const NavigationDestination(
+      NavigationDestination(
           icon: Icon(Icons.task_outlined),
           selectedIcon: Icon(Icons.task),
-          label: 'tasks'),
-      const NavigationDestination(
+          label: AppLocalizations.of(context)!.taskNavigationBar),
+      NavigationDestination(
           icon: Icon(Icons.person_outline),
           selectedIcon: Icon(Icons.person),
-          label: 'profile'),
+          label: AppLocalizations.of(context)!.profileNavigationBar),
     ];
 
     if (widget.isDeveloper) {
       destinations.insert(
         1,
-        const NavigationDestination(
+        NavigationDestination(
           icon: Icon(Icons.groups_2_outlined),
           selectedIcon: Icon(Icons.groups_2),
-          label: 'all tasks',
+          label: AppLocalizations.of(context)!.allTaskNavigationBar,
         ),
       );
     }

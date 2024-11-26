@@ -6,7 +6,8 @@ import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/features/task/models/task.dart';
 import 'package:todo_list_project/features/task/pages/schedule_page.dart';
 import 'package:todo_list_project/shared/utils/calendar_widget.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:todo_list_project/shared/utils/format_string.dart';
 import '../../../core/controller/calendar_controller.dart';
 import '../../../shared/themes/my_colors.dart';
 
@@ -32,7 +33,7 @@ class _TaskPageState extends State<TaskPage> {
         descriptionController.text = task.description;
 
         return AlertDialog(
-          title: const Text("Editing Task..."),
+          title: Text(AppLocalizations.of(context)!.editTaskAlertTitle),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -41,8 +42,8 @@ class _TaskPageState extends State<TaskPage> {
                   controller: titleController,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
-                  decoration: const InputDecoration(
-                    labelText: 'New Title',
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.taskNameTextField,
                   ),
                   onSubmitted: (value) {
                     titleController.text = value;
@@ -55,8 +56,8 @@ class _TaskPageState extends State<TaskPage> {
                   controller: descriptionController,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
-                  decoration: const InputDecoration(
-                    labelText: 'New Description',
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.taskDescriptionTextField,
                   ),
                   onSubmitted: (value) {
                     descriptionController.text = value;
@@ -91,7 +92,7 @@ class _TaskPageState extends State<TaskPage> {
 
           return Observer(builder: (_) {
             return AlertDialog(
-              title: const Text('Add new task'),
+              title: Text(AppLocalizations.of(context)!.addTaskAlertTitle),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -99,18 +100,18 @@ class _TaskPageState extends State<TaskPage> {
                   children: [
                     TextField(
                       controller: titleController,
-                      decoration: const InputDecoration(
-                        labelText: "what's the task name?",
-                        labelStyle: TextStyle(color: Colors.black54),
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.taskNameTextField,
+                        labelStyle: const TextStyle(color: Colors.black54),
                       ),
                     ),
                     TextField(
                       controller: descriptionController,
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
-                      decoration: const InputDecoration(
-                        labelText: "what's the description?",
-                        labelStyle: TextStyle(color: Colors.black54),
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.taskDescriptionTextField,
+                        labelStyle: const TextStyle(color: Colors.black54),
                       ),
                     ),
                     const SizedBox(
@@ -120,7 +121,7 @@ class _TaskPageState extends State<TaskPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "Schedule for tomorrow",
+                          AppLocalizations.of(context)!.scheduleTomorrowLabel,
                           style: TextStyle(
                               decoration: TextDecoration.none,
                               color: !taskStore.isNextDay
@@ -290,13 +291,13 @@ class _TaskPageState extends State<TaskPage> {
         centerTitle: true,
         backgroundColor: MyColors.greenForest,
         foregroundColor: Colors.white,
-        title: const Text("Task List"),
+        title: Text(AppLocalizations.of(context)!.appBarTitleTasks),
         actions: [
           PopupMenuButton<int>(
               onSelected: (item) => handleClick(item),
               itemBuilder: (context) => [
-                    const PopupMenuItem<int>(
-                        value: 0, child: Text("Task Mode")),
+                    PopupMenuItem<int>(
+                        value: 0, child: Text(AppLocalizations.of(context)!.actionTaskModeLabel)),
                   ])
         ],
       ),
@@ -304,20 +305,20 @@ class _TaskPageState extends State<TaskPage> {
         child: ListView(
           padding: const EdgeInsets.only(),
           children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(color: MyColors.greenForest),
+            DrawerHeader(
+              decoration: const BoxDecoration(color: MyColors.greenForest),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Filters',
-                      style: TextStyle(color: Colors.white, fontSize: 24)),
+                  Text(AppLocalizations.of(context)!.drawerTitle,
+                      style: const TextStyle(color: Colors.white, fontSize: 24)),
                 ],
               ),
             ),
             ListTile(
               leading: const Icon(Icons.today),
-              title: const Text('Today'),
+              title: Text(AppLocalizations.of(context)!.todayFilter.capitalize()),
               onTap: () {
                 taskStore.currentFilter = "today";
                 taskStore.loadTasks(authStore.userId!);
@@ -326,7 +327,7 @@ class _TaskPageState extends State<TaskPage> {
             ),
             ListTile(
               leading: const Icon(Icons.calendar_today),
-              title: const Text('Tomorrow'),
+              title: Text(AppLocalizations.of(context)!.tomorrowFilter.capitalize()),
               onTap: () {
                 taskStore.currentFilter = "tomorrow";
                 taskStore.loadTasks(authStore.userId!);
@@ -335,7 +336,7 @@ class _TaskPageState extends State<TaskPage> {
             ),
             ListTile(
               leading: const Icon(Icons.calendar_view_week),
-              title: const Text('Week'),
+              title: Text(AppLocalizations.of(context)!.weekFilter.capitalize()),
               onTap: () {
                 taskStore.currentFilter = "week";
                 taskStore.loadTasks(authStore.userId!);
@@ -344,7 +345,7 @@ class _TaskPageState extends State<TaskPage> {
             ),
             ListTile(
               leading: const Icon(Icons.calendar_month),
-              title: const Text('Month'),
+              title: Text(AppLocalizations.of(context)!.monthFilter.capitalize()),
               onTap: () {
                 taskStore.currentFilter = "month";
                 taskStore.loadTasks(authStore.userId!);
@@ -353,7 +354,7 @@ class _TaskPageState extends State<TaskPage> {
             ),
             ListTile(
               leading: const Icon(Icons.list),
-              title: const Text('All'),
+              title: Text(AppLocalizations.of(context)!.allFilter.capitalize()),
               onTap: () {
                 taskStore.currentFilter = "all";
                 taskStore.loadTasks(authStore.userId!);
@@ -362,7 +363,7 @@ class _TaskPageState extends State<TaskPage> {
             ),
             ListTile(
               leading: const Icon(Icons.filter_alt),
-              title: const Text('Custom'),
+              title: Text(AppLocalizations.of(context)!.customFilter.capitalize()),
               onTap: () {
                 Navigator.pop(context);
                 showDialog(
@@ -421,11 +422,11 @@ class _TaskPageState extends State<TaskPage> {
               const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 80),
           child: Column(
             children: [
-              showListViewStatus(pendingTasks, 'Pending'),
+              showListViewStatus(pendingTasks, AppLocalizations.of(context)!.pendingTaskLabel.capitalize()),
               const SizedBox(
                 height: 8,
               ),
-              showListViewStatus(doneTasks, 'Finished'),
+              showListViewStatus(doneTasks, AppLocalizations.of(context)!.finishedTaskLabel.capitalize()),
             ],
           ),
         );
@@ -446,7 +447,7 @@ class _TaskPageState extends State<TaskPage> {
           foregroundColor: Colors.white,
           icon: const Icon(Icons.task_alt),
           label: Text(
-            taskStore.taskMode ? "Add Task" : "Schedule Task",
+            taskStore.taskMode ? AppLocalizations.of(context)!.addTaskBtn : AppLocalizations.of(context)!.scheduleTaskBtn,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),

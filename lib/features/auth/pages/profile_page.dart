@@ -7,6 +7,7 @@ import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
 import 'package:todo_list_project/features/auth/widgets/user_list.dart';
 import 'package:todo_list_project/shared/utils/format_string.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../shared/themes/my_colors.dart';
 import '../../../shared/utils/show_snack_bar.dart';
 
@@ -45,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
         centerTitle: true,
         backgroundColor: MyColors.greenForest,
         foregroundColor: Colors.white,
-        title: const Text("Profile"),
+        title: Text(AppLocalizations.of(context)!.profilePageAppBarTitle),
       ),
       body: Observer(
         builder: (_) => ListView(
@@ -66,7 +67,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 5,
                   ),
                   Text(
-                    userStore.userType,
+                    userStore.userType == "developer"
+                        ? AppLocalizations.of(context)!.developerRole
+                        : AppLocalizations.of(context)!.supportRole,
                     style: const TextStyle(
                       fontWeight: FontWeight.w200,
                       fontSize: 14,
@@ -80,18 +83,14 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             Text(
               "${taskStore.currentFilter.toString().capitalize()} Tasks",
-              style: const TextStyle(
-                  
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.pending_outlined),
-              title: const Text(
-                "Pending Tasks",
-                style: TextStyle(
-                  
+              title: Text(
+                AppLocalizations.of(context)!.pendingTaskTitle,
+                style: const TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
                 ),
@@ -102,7 +101,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     .length
                     .toString(),
                 style: const TextStyle(
-                  
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
                 ),
@@ -110,10 +108,9 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ListTile(
               leading: const Icon(Icons.task_alt),
-              title: const Text(
-                "Finished Tasks",
-                style: TextStyle(
-                  
+              title: Text(
+                AppLocalizations.of(context)!.finishedTaskTitle,
+                style: const TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
                 ),
@@ -124,7 +121,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     .length
                     .toString(),
                 style: const TextStyle(
-                  
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
                 ),
@@ -132,9 +128,9 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ListTile(
               leading: const Icon(Icons.all_inbox_sharp),
-              title: const Text(
-                "Total Tasks",
-                style: TextStyle(
+              title: Text(
+                AppLocalizations.of(context)!.totalTaskTitle,
+                style: const TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
                 ),
@@ -162,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         shadowColor: Colors.black12,
                         child: ListTile(
                           leading: const Icon(Icons.transform),
-                          title: const Text("Make user Developer"),
+                          title: Text(AppLocalizations.of(context)!.makeDevBtn),
                           trailing: const Icon(Icons.chevron_right),
                           onTap: () {
                             userList(
@@ -179,7 +175,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         shadowColor: Colors.black12,
                         child: ListTile(
                           leading: const Icon(Icons.transform),
-                          title: const Text("Make user support"),
+                          title: Text(AppLocalizations.of(context)!.makeSupBtn),
                           trailing: const Icon(Icons.chevron_right),
                           onTap: () {
                             userList(
@@ -198,7 +194,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Icons.logout,
                         color: Colors.red,
                       ),
-                      title: const Text("Logout"),
+                      title: Text(AppLocalizations.of(context)!.logoutBtn),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.red,
@@ -224,7 +220,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Icons.logout,
                         color: Colors.red,
                       ),
-                      title: const Text("Delete account"),
+                      title: Text(AppLocalizations.of(context)!.deleteAccountBtn),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.red,

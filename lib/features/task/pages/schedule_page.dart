@@ -7,6 +7,7 @@ import 'package:todo_list_project/core/stores/tasks_store.dart';
 import 'package:todo_list_project/shared/themes/my_colors.dart';
 import 'package:todo_list_project/shared/utils/calendar_widget.dart';
 import 'package:todo_list_project/shared/utils/show_snack_bar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScheduleTaskPage extends StatefulWidget {
   const ScheduleTaskPage({super.key});
@@ -49,7 +50,7 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Schedule Task"),
+        title: Text(AppLocalizations.of(context)!.appBarScheduleTasks),
         backgroundColor: MyColors.greenForest,
         foregroundColor: Colors.white,
       ),
@@ -65,8 +66,8 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
                     TextField(
                       autocorrect: true,
                       controller: titleController,
-                      decoration: const InputDecoration(
-                        labelText: "Title Here",
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.taskNameTextField,
                       ),
                     ),
                     TextField(
@@ -74,8 +75,8 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
                       controller: descriptionController,
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
-                      decoration: const InputDecoration(
-                        labelText: "Description here",
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.taskDescriptionTextField,
                       ),
                     ),
                   ],
@@ -100,7 +101,7 @@ class _ScheduleTaskPageState extends State<ScheduleTaskPage> {
                     } else {
                       showErrorSnackBar(
                           context: context,
-                          error: "Write a title for your task");
+                          error: AppLocalizations.of(context)!.errorEmptyNameTask);
                     }
                   },
                   child: const Icon(Icons.check)),

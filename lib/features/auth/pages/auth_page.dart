@@ -5,7 +5,7 @@ import 'package:todo_list_project/core/repository/role_repository.dart';
 import 'package:todo_list_project/core/stores/auth_store.dart';
 import 'package:todo_list_project/core/stores/user_store.dart';
 import 'package:todo_list_project/shared/utils/show_snack_bar.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../shared/themes/decoration_field_auth.dart';
 import '../../../shared/themes/my_colors.dart';
 
@@ -69,14 +69,14 @@ class _AuthPageState extends State<AuthPage> {
                             style: const ButtonStyle(
                                 backgroundColor: WidgetStatePropertyAll(
                                     MyColors.greenForest), foregroundColor: WidgetStatePropertyAll(Colors.white)),
-                            child: Text(isSignUp ? "Sign-up" : "Sign-in"),
+                            child: Text(isSignUp ? AppLocalizations.of(context)!.registerBtn : AppLocalizations.of(context)!.loginBtn),
                           ),
                           TextButton(
                             onPressed: _toggleSignUp,
                             child: Text(
                               isSignUp
-                                  ? "Have an account? Sign-in"
-                                  : "You don't have an account? Sign-up",
+                                  ? AppLocalizations.of(context)!.switchLoginWayBtn
+                                  : AppLocalizations.of(context)!.switchRegisterWayBtn,
                               style: const TextStyle(color: MyColors.greenForest),
                             ),
                           ),
@@ -115,7 +115,7 @@ class _AuthPageState extends State<AuthPage> {
         showErrorSnackBar(context: context, error: errorMessage);
       }
     } else {
-      showErrorSnackBar(context: context, error: "Some fields are invalid");
+      showErrorSnackBar(context: context, error: AppLocalizations.of(context)!.errorEmptyField);
     }
   }
 
@@ -141,8 +141,8 @@ class _AuthPageState extends State<AuthPage> {
       controller: email,
       decoration: getAuthInputDecoration("e-mail"),
       validator: (String? value) {
-        if (value!.isEmpty) return "Empty Field";
-        if (!isValidEmail(value)) return "This e-mail is invalid";
+        if (value!.isEmpty) return AppLocalizations.of(context)!.errorEmptyField;
+        if (!isValidEmail(value)) return AppLocalizations.of(context)!.errorEmailField;
         return null;
       },
     );
@@ -152,11 +152,12 @@ class _AuthPageState extends State<AuthPage> {
     return TextFormField(
       controller: password,
       obscureText: true,
-      decoration: getAuthInputDecoration("password"),
+      decoration: getAuthInputDecoration(AppLocalizations.of(context)!.passwordTextField),
       validator: (String? value) {
-        if (value!.isEmpty) return 'This field is empty';
-        if (value.length < 8)
-          return 'The password must have at least 8 characters';
+        if (value!.isEmpty) return AppLocalizations.of(context)!.errorEmptyField;
+        if (value.length < 8) {
+          return AppLocalizations.of(context)!.errorPasswordField;
+        }
         return null;
       },
     );
@@ -165,12 +166,13 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildConfirmPasswordField() {
     return TextFormField(
       obscureText: true,
-      decoration: getAuthInputDecoration("Confirm password"),
+      decoration: getAuthInputDecoration(AppLocalizations.of(context)!.confirmPasswordTextField),
       validator: (String? value) {
-        if (value!.isEmpty) return 'This field is empty';
-        if (value.length < 8)
-          return 'The password must have at least 8 characters';
-        if (value != password.text) return 'This password is not the same';
+        if (value!.isEmpty) return AppLocalizations.of(context)!.errorEmptyField;
+        if (value.length < 8) {
+          return AppLocalizations.of(context)!.errorPasswordField;
+        }
+        if (value != password.text) return AppLocalizations.of(context)!.errorConfirmPasswordField;
         return null;
       },
     );
@@ -179,11 +181,12 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildUsernameField() {
     return TextFormField(
       controller: username,
-      decoration: getAuthInputDecoration("username"),
+      decoration: getAuthInputDecoration(AppLocalizations.of(context)!.usernameTextField),
       validator: (String? value) {
-        if (value!.isEmpty) return 'This field is empty';
-        if (value.length < 2)
-          return 'The username must have at least 2 letters';
+        if (value!.isEmpty) return AppLocalizations.of(context)!.errorEmptyField;
+        if (value.length < 2) {
+          return AppLocalizations.of(context)!.errorUsernameField;
+        }
         return null;
       },
     );
